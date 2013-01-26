@@ -12,7 +12,7 @@
   {String password=new String(rs.getString("password"));
   if(password.equals(password1))
   {session.setAttribute("userid1",userid1);
-  response.sendRedirect("sucess.jsp");
+  response.sendRedirect("success.jsp");
   }
   else
 {response.sendRedirect("login.jsp");

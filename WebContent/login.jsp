@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=gb2312" %>
 <html>
 <body>
-<form method="get" action="checklogin.jsp">
+<form method="post" action="checklogin.jsp">
 <table>
 <tr><td> 输入用户名：</td>
 <td><input type=text name=userid ></td>
