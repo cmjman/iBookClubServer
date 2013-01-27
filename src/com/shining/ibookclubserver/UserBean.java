@@ -2,27 +2,40 @@ package com.shining.ibookclubserver;
 
 public class UserBean {
 
-	  private String userid;
+	  private String email;
       
 	  private String password;
+	  
+	  private String nickname;
+	  
+	//  private static int IDcount=0;
        
-	  public void setUserId(String userid){
-               
-		  this.userid=userid;
+	  public void setEmail(String email){
+          
+		  this.email=email;
       }
        
-	  public void setPassword(String password){
+	  public void setPassWord(String password){
                
 		  this.password=password;
       }
+	  
+	  public void setNickName(String nickname){
+		  this.nickname=nickname;
+	  }
        
-	  public String  getUserId(){
+	  public String  getEmail(){
                
-		  return this.userid;
+		  return this.email;
       }
        
-	  public String getPassword(){
+	  public String getPassWord(){
                 
 		  return this.password;
+	  }
+	  
+	  public String getNickName(){
+		  
+		  return this.nickname;
 	  }
 }

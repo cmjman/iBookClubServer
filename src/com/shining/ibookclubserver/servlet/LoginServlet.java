@@ -1,4 +1,4 @@
-package com.shining.ibookclubserver;
+package com.shining.ibookclubserver.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		
 		
-		 String userid1=new String(request.getParameter("userid"));
+		 String email1=new String(request.getParameter("email"));
 		  String password1=new String(request.getParameter("password"));
 		  
 	//	 System.out.println(userid1+password1);
@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
 		
 		 Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/iBookClubDB","root","123456");
 		 Statement stmt=con.createStatement();
-		 String sql="select * from  userinfo where userid='"+userid1+"';";
+		 String sql="select * from  userinfo where email='"+email1+"';";
 		 ResultSet rs=stmt.executeQuery(sql);
 		  if(rs.next())
 		  {
@@ -65,9 +65,18 @@ public class LoginServlet extends HttpServlet {
 				 
 			//	Gson gson = new Gson();  
 			//	JSONObject object =gson.toJson(user1);
-				String result="登陆成功！";
+				
+				request.getSession(true).setAttribute("email" , email1);
+				
+				String nickname=new String(rs.getString("nickname"));
+				
+				JSONObject jsonObj = new JSONObject().put("email" , email1)
+													.put("nickname", nickname)
+													.put("ActionResult", true);
+				
+			//	String result="登陆成功！";
 				PrintWriter out = response.getWriter();
-				out.print(result);
+				out.print(jsonObj.toString());
 				out.flush();
 				out.close();
 			  

@@ -11,15 +11,17 @@
 </head>
 <body>
 <%
-String userid =request.getParameter("userid");
+String email =request.getParameter("email");
 String password = request.getParameter("password");
-userBean.setUserId(userid);
-userBean.setPassword(password);
-System.out.println(userid+password);
+String nickname = request.getParameter("nickname");
+userBean.setEmail(email);
+userBean.setPassWord(password);
+userBean.setNickName(nickname);
+
 %>
 <% try{
   regist.setUserBean(userBean);
-  out.println(userid);
+  out.println(email);
   regist.regist();
   out.println("×¢²á³É¹¦");}
   catch(Exception e){

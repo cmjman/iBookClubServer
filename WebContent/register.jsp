@@ -1,7 +1,8 @@
 <%@page contentType="text/html; charset=gb2312" language="java" import="java.util.*,java.io.*"%>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel=stylesheet href="button.css">
 </head>
 <body>
 <center>
@@ -9,8 +10,11 @@
   <form action="adduser.jsp" method=post>
   <table border="1" bgcolor="#0099CC">
     <tr>
-      <td>        用户名:
-        <input type="text" name="userid">
+      <td>        邮箱:
+        <input type="text" name="email">
+      </td>
+       <td>        昵称:
+        <input type="text" name="nickname">
       </td>
     </tr>
     <tr valign="middle">
@@ -20,7 +24,7 @@
     </tr>
     <tr>
       <td>
-        <input type=submit value=提交>
+        <input type=submit value=提交 class="button">
       </td>
     </tr>
   </table>

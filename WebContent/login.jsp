@@ -1,20 +1,27 @@
-<%@ page contentType="text/html; charset=gb2312" %>
+<%@ page contentType="text/html; charset=utf-8" %>
 <html>
-<body>
-<form method="post" action="checklogin.jsp">
-<table>
-<tr><td> ╩ф╚ы╙├╗з├√г║</td>
-<td><input type=text name=userid ></td>
-</tr>
-<tr><td>╩ф╚ы├▄┬ыг║</td>
-<td><input type=password name=password></td>
-</tr>
-<tr><td><input type=submit value=╚╖╚╧>
-</td></tr>
-</table>
-</form>
-<form action="register.jsp">
-<input type=submit value=╫в▓с>
-</form>
-</body>
+	<head>
+	<link rel=stylesheet href="button.css">
+	</head>
+	<body>
+		<form method="post" action="checklogin.jsp">
+		<table>
+		<tr>
+			<td>ш╛УхЕечФицИ╖хРНя╝Ъ</td>
+			<td><input type=text name=email ></td>
+		</tr>
+		<tr>
+			<td>ш╛УхЕехпЖчаБя╝Ъ</td>
+			<td><input type=password name=password></td>
+		</tr>
+		<tr>
+			<td><input type=submit value=чбошод class="button">
+			</td>
+		</tr>
+		</table>
+		</form>
+		<form action="register.jsp">
+			<input type=submit value=ц│ихЖМ class="button">
+		</form>
+	</body>
 </html>

@@ -7,6 +7,7 @@ public class UserRegister {
 
 	 private UserBean userBean;
      private Connection con;
+ //    private static int IDcount=0;
    
      public UserRegister(){
           
@@ -29,11 +30,12 @@ public class UserRegister {
  
      public void regist() throws Exception{
            
-    	 String reg="insert into userinfo(userid,password)  values(?,?)";
+    	 String reg="insert into userinfo(email,password,nickname)  values(?,?,?)";
          try{
         	 PreparedStatement pstmt=con.prepareStatement(reg);
-             pstmt.setString(1,userBean.getUserId());
-             pstmt.setString(2,userBean.getPassword());
+             pstmt.setString(1,userBean.getEmail());
+             pstmt.setString(2,userBean.getPassWord());
+             pstmt.setString(3, userBean.getNickName());
              pstmt.executeUpdate();
          }
          catch(Exception e){
