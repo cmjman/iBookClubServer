@@ -18,6 +18,7 @@
 		String isbn=rs.getString("isbn");
 	//	System.out.println(isbn);
 		session.setAttribute("isbn",isbn);
+		session.setAttribute("email",email);
 	 }
 	 
 

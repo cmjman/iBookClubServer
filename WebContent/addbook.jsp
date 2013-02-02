@@ -14,18 +14,20 @@
 </head>
 <body>
 	<%
+		String email=(String)session.getAttribute("email"); 
 		String isbn =request.getParameter("isbn");
-		bookBean.setIsbn(isbn);
-		bookBean.setBookname("test");
-		bookBean.setAuthor("test");
-		bookBean.setPress("test");
+		SearchBookThread search=new SearchBookThread(isbn);
+		search.run();
+		bookBean=search.getBean();
 	
+	//	System.out.println(bookBean.getIsbn());
 
 	%>
 	<% try{
   		add.setBookBean(bookBean);
-  		out.println(isbn);
-  		add.add();
+  		if(!add.isBookExist())
+  			add.add();
+  		add.setOwner(email);
   		out.println("发布成功");}
   			catch(Exception e){
   		out.println(e.getMessage());

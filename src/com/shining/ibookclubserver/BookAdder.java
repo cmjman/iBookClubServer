@@ -40,12 +40,12 @@ public class BookAdder {
     	 try{
     		 Statement stmt=con.createStatement();
     		 ResultSet rs=stmt.executeQuery(sql);
-    		 if(rs.equals(null))
-    			 return false;
+    		 if(rs.next())
+    			 return true;
     	 }catch(Exception e){
     		 e.printStackTrace();
     	 }
-    	 return true;
+    	 return false;
      }
  
      public void add() throws Exception{
