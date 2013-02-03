@@ -1,10 +1,18 @@
 package com.shining.ibookclubserver.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+
 
 import com.shining.ibookclubserver.BookAdder;
 import com.shining.ibookclubserver.BookBean;
@@ -59,10 +67,35 @@ public class AddBookServlet extends HttpServlet {
 			if(!bookadder.isBookExist())
 				bookadder.add();
 			bookadder.setOwner(email);
+		
+			ArrayList<String> list=bookadder.getMyBook(email);
+			JSONArray jsonArray=new JSONArray();
+			int count=0;
+			
+			for(String isbn:list){
+			
+				JSONObject jsonObject=new JSONObject();
+				jsonObject.put("isbn", isbn);
+				jsonArray.add(jsonObject);
+		
+			}
+			
+		//	jsonObj.append("count", list.size());
+		//	jsonObj.append("ActionResult", true);
+			PrintWriter out = response.getWriter();
+		//	System.out.println(jsonArray);
+			out.print(jsonArray.toString());
+			out.flush();
+			out.close();
+			
+		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	
+		
 		
 		
 	}

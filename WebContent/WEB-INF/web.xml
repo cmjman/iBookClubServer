@@ -34,4 +34,14 @@
     <servlet-name>AddBookServlet</servlet-name>
     <url-pattern>/AddBookServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>PersonalBookServlet</display-name>
+    <servlet-name>PersonalBookServlet</servlet-name>
+    <servlet-class>com.shining.ibookclubserver.servlet.PersonalBookServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PersonalBookServlet</servlet-name>
+    <url-pattern>/PersonalBookServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

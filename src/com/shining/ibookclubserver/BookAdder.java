@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 
 
@@ -78,6 +79,25 @@ public class BookAdder {
     		 e.printStackTrace();
     	 }
     	 return -1;
+     }
+     
+     public ArrayList<String> getMyBook(String email){
+    	 
+    	 String sql_getmybook="select isbn from bookowner where id in(select id from userinfo where email='"+email+"');";
+    	 ArrayList<String> bookList=new ArrayList<String>();
+    	 try{
+    		 Statement stmt=con.createStatement();
+    		 ResultSet rs=stmt.executeQuery(sql_getmybook);
+    		 for(int i=0;rs.next();i++){
+    			 
+    			bookList.add(rs.getString("isbn"));
+    		 }
+    	 }catch(Exception e){
+    		e.printStackTrace();
+    	 }
+    	 
+    	 return bookList;
+    	 
      }
      
      public void setOwner(String email){
