@@ -51,13 +51,17 @@ public class BookAdder {
  
      public void add() throws Exception{
            
-    	 String reg="insert into bookinfo(isbn,name,press,author)  values(?,?,?,?)";
+    	 String reg="insert into bookinfo(isbn,name,publisher,author,bookcover,summary,price)  values(?,?,?,?,?,?,?)";
          try{
         	 PreparedStatement pstmt=con.prepareStatement(reg);
              pstmt.setString(1,bookBean.getIsbn());
              pstmt.setString(2,bookBean.getBookname());
-             pstmt.setString(3, bookBean.getPress());
+             pstmt.setString(3, bookBean.getPublisher());
              pstmt.setString(4, bookBean.getAuthor());
+             pstmt.setString(5, bookBean.getBookcover_url());
+             //TODO summary字段过长，待处理
+             pstmt.setString(6, null);
+             pstmt.setString(7, bookBean.getPrice());
              pstmt.executeUpdate();
          }
          catch(Exception e){
@@ -81,16 +85,23 @@ public class BookAdder {
     	 return -1;
      }
      
-     public ArrayList<String> getMyBook(String email){
+     public ArrayList<BookBean> getMyBook(String email){
     	 
-    	 String sql_getmybook="select isbn from bookowner where id in(select id from userinfo where email='"+email+"');";
-    	 ArrayList<String> bookList=new ArrayList<String>();
+    	 String sql_getmybook="select * from bookinfo where isbn in(select isbn from bookowner where id in(select id from userinfo where email='"+email+"'));";
+    	 ArrayList<BookBean> bookList=new ArrayList<BookBean>();
     	 try{
     		 Statement stmt=con.createStatement();
     		 ResultSet rs=stmt.executeQuery(sql_getmybook);
     		 for(int i=0;rs.next();i++){
-    			 
-    			bookList.add(rs.getString("isbn"));
+    			BookBean bean=new BookBean();
+    			bean.setIsbn(rs.getString("isbn"));
+    			bean.setAuthor(rs.getString("author"));
+    			bean.setBookcover_url(rs.getString("bookcover"));
+    			bean.setPublisher(rs.getString("publisher"));
+    			bean.setPrice(rs.getString("price"));
+    			bean.setBookname(rs.getString("name"));
+    			bean.setSummary(rs.getString("summary"));
+    			bookList.add(bean);
     		 }
     	 }catch(Exception e){
     		e.printStackTrace();

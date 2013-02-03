@@ -56,7 +56,8 @@ public class SearchBookThread extends Thread{
 			bookbean.setIsbn(isbn);
 			bookbean.setAuthor(json.getString("author"));
 			bookbean.setBookname(json.getString("title"));
-			bookbean.setPress(json.getString("publisher"));
+			bookbean.setPublisher(json.getString("publisher"));
+			
 		//	bookbean.notify();
 		} catch (Exception e) {
 			
