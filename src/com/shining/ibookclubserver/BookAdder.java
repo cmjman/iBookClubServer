@@ -85,32 +85,7 @@ public class BookAdder {
     	 return -1;
      }
      
-     public ArrayList<BookBean> getMyBook(String email){
-    	 
-    	 String sql_getmybook="select * from bookinfo where isbn in(select isbn from bookowner where id in(select id from userinfo where email='"+email+"'));";
-    	 ArrayList<BookBean> bookList=new ArrayList<BookBean>();
-    	 try{
-    		 Statement stmt=con.createStatement();
-    		 ResultSet rs=stmt.executeQuery(sql_getmybook);
-    		 for(int i=0;rs.next();i++){
-    			BookBean bean=new BookBean();
-    			bean.setIsbn(rs.getString("isbn"));
-    			bean.setAuthor(rs.getString("author"));
-    			bean.setBookcover_url(rs.getString("bookcover"));
-    			bean.setPublisher(rs.getString("publisher"));
-    			bean.setPrice(rs.getString("price"));
-    			bean.setBookname(rs.getString("name"));
-    			bean.setSummary(rs.getString("summary"));
-    			bookList.add(bean);
-    		 }
-    	 }catch(Exception e){
-    		e.printStackTrace();
-    	 }
-    	 
-    	 return bookList;
-    	 
-     }
-     
+   
      public void setOwner(String email){
     	 String sql="insert into bookowner(isbn,id)  values(?,?)";
     	 int id=findID(email);

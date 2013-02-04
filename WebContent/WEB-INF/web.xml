@@ -36,12 +36,12 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>PersonalBookServlet</display-name>
-    <servlet-name>PersonalBookServlet</servlet-name>
-    <servlet-class>com.shining.ibookclubserver.servlet.PersonalBookServlet</servlet-class>
+    <display-name>GetBookServlet</display-name>
+    <servlet-name>GetBookServlet</servlet-name>
+    <servlet-class>com.shining.ibookclubserver.servlet.GetBookServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>PersonalBookServlet</servlet-name>
-    <url-pattern>/PersonalBookServlet</url-pattern>
+    <servlet-name>GetBookServlet</servlet-name>
+    <url-pattern>/GetBookServlet</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -19,6 +19,7 @@ import net.sf.json.JSONSerializer;
 import com.google.gson.Gson;
 import com.shining.ibookclubserver.BookAdder;
 import com.shining.ibookclubserver.BookBean;
+import com.shining.ibookclubserver.BookInfoReference;
 
 /**
  * Servlet implementation class AddBookServlet
@@ -33,6 +34,7 @@ public class AddBookServlet extends HttpServlet {
 	public String publisher;
 	public BookBean bookbean=new BookBean();
 	public BookAdder bookadder=new BookAdder();
+	public BookInfoReference bookInfoReference=new BookInfoReference();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -77,7 +79,7 @@ public class AddBookServlet extends HttpServlet {
 				bookadder.add();
 			bookadder.setOwner(email);
 		
-			ArrayList<BookBean> list=bookadder.getMyBook(email);
+			ArrayList<BookBean> list=bookInfoReference.getMyBook(email);
 			//JSONArray jsonArray=new JSONArray();
 			Gson gson_response=new Gson();
 		
@@ -97,7 +99,11 @@ public class AddBookServlet extends HttpServlet {
 		//	jsonObj.append("ActionResult", true);
 			response.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
-		//	System.out.println(jsonArray);
+			
+			
+			System.out.println("服务器端返回结果："+gson_response.toJson(list));
+			
+			
 			out.print(gson_response.toJson(list));
 			out.flush();
 			out.close();
