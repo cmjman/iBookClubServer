@@ -17,9 +17,9 @@ import net.sf.json.JSONSerializer;
 
 
 import com.google.gson.Gson;
-import com.shining.ibookclubserver.BookAdder;
 import com.shining.ibookclubserver.BookBean;
-import com.shining.ibookclubserver.BookInfoReference;
+
+import com.shining.ibookclubserver.dao.BookDao;
 
 /**
  * Servlet implementation class AddBookServlet
@@ -33,8 +33,6 @@ public class AddBookServlet extends HttpServlet {
 	public String author;
 	public String publisher;
 	public BookBean bookbean=new BookBean();
-	public BookAdder bookadder=new BookAdder();
-	public BookInfoReference bookInfoReference=new BookInfoReference();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -72,14 +70,17 @@ public class AddBookServlet extends HttpServlet {
 	//	bookbean= (BookBean)JSONSerializer.toJava(jsonBean);
 		Gson gson=new Gson();
 		bookbean=gson.fromJson(request.getParameter("bookbean"),BookBean.class);
-
-		bookadder.setBookBean(bookbean);
-		try {
-			if(!bookadder.isBookExist())
-				bookadder.add();
-			bookadder.setOwner(email);
 		
-			ArrayList<BookBean> list=bookInfoReference.getMyBook(email);
+		
+		BookDao dao=BookDao.getInstance();
+		dao.setBookBean(bookbean);
+		
+		try {
+			if(!dao.isBookExist())
+				dao.addBook();
+			dao.setOwner(email);
+		
+			ArrayList<BookBean> list=dao.getMyBook(email);
 			//JSONArray jsonArray=new JSONArray();
 			Gson gson_response=new Gson();
 		

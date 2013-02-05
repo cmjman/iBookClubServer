@@ -1,30 +1,27 @@
 package com.shining.ibookclubserver.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-
-import com.shining.ibookclubserver.BookBean;
 
 import com.shining.ibookclubserver.dao.BookDao;
 
 /**
- * Servlet implementation class PersonalBookServlet
+ * Servlet implementation class DeleteBookServlet
  */
-public class GetBookServlet extends HttpServlet {
+public class DeleteBookServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private String isbn;
+	private String email;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetBookServlet() {
+    public DeleteBookServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -40,41 +37,15 @@ public class GetBookServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		
 		request.setCharacterEncoding("UTF-8");
-		String email=request.getParameter("email");
+		email=request.getParameter("email");
+		
+		isbn=new String(request.getParameter("isbn"));
 		
 		BookDao dao=BookDao.getInstance();
-		ArrayList<BookBean> list;
-		Gson gson_response=new Gson();
-		if(email==null){
-			
-			list=dao.getPublicBook();
-			
-			System.out.println("GetPublicBook返回："+gson_response.toJson(list));
-			
-		}else{
-			
-			
-			
-			 list=dao.getMyBook(email);
-			 System.out.println("GetMyBook返回："+gson_response.toJson(list));
-		
-		}
-		
-	
-	
-		
-	
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		out.print(gson_response.toJson(list));
-		out.flush();
-		out.close();
-		
-	
-	
+		dao.deleteBook(email, isbn);
 	}
 
 }

@@ -2,29 +2,27 @@ package com.shining.ibookclubserver.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-
-import com.shining.ibookclubserver.BookBean;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.shining.ibookclubserver.dao.BookDao;
 
 /**
- * Servlet implementation class PersonalBookServlet
+ * Servlet implementation class CheckBookServlet
  */
-public class GetBookServlet extends HttpServlet {
+public class CheckBookServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetBookServlet() {
+    public CheckBookServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -40,41 +38,33 @@ public class GetBookServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
 		
 		request.setCharacterEncoding("UTF-8");
-		String email=request.getParameter("email");
+	String	email=request.getParameter("email");
+		
+	String	isbn=new String(request.getParameter("isbn"));
 		
 		BookDao dao=BookDao.getInstance();
-		ArrayList<BookBean> list;
-		Gson gson_response=new Gson();
-		if(email==null){
-			
-			list=dao.getPublicBook();
-			
-			System.out.println("GetPublicBook返回："+gson_response.toJson(list));
-			
-		}else{
-			
-			
-			
-			 list=dao.getMyBook(email);
-			 System.out.println("GetMyBook返回："+gson_response.toJson(list));
+		Boolean result=dao.checkBook(email, isbn);
 		
-		}
+		JSONObject jsonObj;
+		try {
+			jsonObj = new JSONObject().put("ActionResult", result);
 		
-	
-	
 		
-	
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
-		out.print(gson_response.toJson(list));
+		out.print(jsonObj);
 		out.flush();
 		out.close();
 		
-	
-	
+		} catch (JSONException e) {
+			
+			e.printStackTrace();
+		}
 	}
 
 }

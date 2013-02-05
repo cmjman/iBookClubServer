@@ -44,4 +44,24 @@
     <servlet-name>GetBookServlet</servlet-name>
     <url-pattern>/GetBookServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>DeleteBookServlet</display-name>
+    <servlet-name>DeleteBookServlet</servlet-name>
+    <servlet-class>com.shining.ibookclubserver.servlet.DeleteBookServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteBookServlet</servlet-name>
+    <url-pattern>/DeleteBookServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>CheckBookServlet</display-name>
+    <servlet-name>CheckBookServlet</servlet-name>
+    <servlet-class>com.shining.ibookclubserver.servlet.CheckBookServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CheckBookServlet</servlet-name>
+    <url-pattern>/CheckBookServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
