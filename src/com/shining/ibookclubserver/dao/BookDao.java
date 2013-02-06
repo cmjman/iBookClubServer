@@ -185,4 +185,31 @@ public class BookDao {
 	   	 return bookList;
    	 
     }
+	
+	public ArrayList<BookBean> searchPublicBook(String keyword){
+		
+		String sql="select * from bookinfo where name like '%"+keyword+"%';";
+			
+		ArrayList<BookBean> bookList=new ArrayList<BookBean>();
+	   	 try{
+	   		 Statement stmt=con.createStatement();
+	   		 ResultSet rs=stmt.executeQuery(sql);
+	   		 for(int i=0;rs.next();i++){
+	   			 
+	   			BookBean bean=new BookBean();
+	   			bean.setIsbn(rs.getString("isbn"));
+	   			bean.setAuthor(rs.getString("author"));
+	   			bean.setBookcover_url(rs.getString("bookcover"));
+	   			bean.setPublisher(rs.getString("publisher"));
+	   			bean.setPrice(rs.getString("price"));
+	   			bean.setBookname(rs.getString("name"));
+	   			bean.setSummary(rs.getString("summary"));
+	   			bookList.add(bean);
+	   		 }
+	   	 }catch(Exception e){
+	   		e.printStackTrace();
+	   	 }
+	   	 return bookList;
+		
+	}
 }

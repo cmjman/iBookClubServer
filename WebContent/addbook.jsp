@@ -5,7 +5,7 @@
 <jsp:useBean id="bookBean" class="com.shining.ibookclubserver.BookBean" scope="request">
 <jsp:setProperty name="bookBean" property="*"/>
 </jsp:useBean>    
-<jsp:useBean id="add" class="com.shining.ibookclubserver.BookAdder" scope="request"/>    
+<jsp:useBean id="dao" class="com.shining.ibookclubserver.dao.BookDao" scope="request"/>    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -24,10 +24,10 @@
 
 	%>
 	<% try{
-  		add.setBookBean(bookBean);
-  		if(!add.isBookExist())
-  			add.add();
-  		add.setOwner(email);
+  		dao.setBookBean(bookBean);
+  		if(!dao.isBookExist())
+  			dao.addBook();
+  		dao.setOwner(email);
   		out.println("发布成功");}
   			catch(Exception e){
   		out.println(e.getMessage());

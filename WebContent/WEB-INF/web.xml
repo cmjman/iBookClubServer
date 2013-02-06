@@ -64,4 +64,14 @@
     <servlet-name>CheckBookServlet</servlet-name>
     <url-pattern>/CheckBookServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>SearchBookServlet</display-name>
+    <servlet-name>SearchBookServlet</servlet-name>
+    <servlet-class>com.shining.ibookclubserver.servlet.SearchBookServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SearchBookServlet</servlet-name>
+    <url-pattern>/SearchBookServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
