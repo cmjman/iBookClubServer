@@ -1,10 +1,14 @@
 package com.shining.ibookclubserver.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
 
 
 import com.shining.ibookclubserver.dao.BookDao;
@@ -46,6 +50,19 @@ public class DeleteBookServlet extends HttpServlet {
 		
 		BookDao dao=BookDao.getInstance();
 		dao.deleteBook(email, isbn);
+		
+		JSONObject jsonObject=new JSONObject();
+			
+		jsonObject.put("Result","Success");
+		
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		System.out.println("DeleteBook:"+jsonObject.toString());
+		
+		out.print(jsonObject.toString());
+		out.flush();
+		out.close();
 	}
 
 }

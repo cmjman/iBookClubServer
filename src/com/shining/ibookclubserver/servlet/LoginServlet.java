@@ -46,7 +46,7 @@ public class LoginServlet extends HttpServlet {
 		 String email1=new String(request.getParameter("email"));
 		  String password1=new String(request.getParameter("password"));
 		  
-	//	 System.out.println(userid1+password1);
+		 System.out.println("LoginServlet:"+email1+password1);
 		  try {
 			Class.forName("com.mysql.jdbc.Driver");
 		

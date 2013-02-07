@@ -162,7 +162,7 @@ public class BookDao {
 	
 	public ArrayList<BookBean> getPublicBook(){
    	 
-	   	 String sql="select * from bookinfo;";
+	   	 String sql="select * from bookinfo where isbn in(select isbn from bookowner);";
 	   	 ArrayList<BookBean> bookList=new ArrayList<BookBean>();
 	   	 try{
 	   		 Statement stmt=con.createStatement();
