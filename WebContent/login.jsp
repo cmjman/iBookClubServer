@@ -1,11 +1,14 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <html>
 	<head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-	<link rel=stylesheet href="button.css"/>
-	<link rel=stylesheet href="layout.css"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="CSS/bootstrap.min.css" rel="stylesheet" media="screen"> 
+	<link rel=stylesheet href="CSS/button.css"/>
+	<link rel=stylesheet href="CSS/layout.css"/>
 	</head>
 	<body>
+		<script src="JS/bootstrap.min.js"></script>
+		<script src="JS/jquery-1.9.1.min.js"></script>
 		<form method="post" action="checklogin.jsp">
 		<table>
 		<tr>

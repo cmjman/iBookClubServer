@@ -1,3 +1,4 @@
+@CHARSET "UTF-8";
 body
     {
         margin-left:auto; 
@@ -83,20 +84,20 @@ body
     }
     
 		/* Buttons and inputs */
-	
+
 	button.button, input.button 
 	{ 
 		cursor: pointer;
 		overflow: visible; /* removes extra side spacing in IE */
 	}
-	
+
 	/* removes extra inner spacing in Firefox */
 	button::-moz-focus-inner 
 	{
 	  border: 0;
 	  padding: 0;
 	}
-	
+
 	/* If line-height can't be modified, then fix Firefox spacing with padding */
 	 input::-moz-focus-inner 
 	{
