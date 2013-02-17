@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import com.shining.ibookclubserver.BookBean;
 
@@ -120,6 +121,29 @@ public class BookDao {
 			 e.printStackTrace();
 		 }
 		 return false;
+		
+	}
+	
+	public Hashtable<Integer,String> borrowBook(String email,String isbn){
+		
+		String sql="select id,nickname from userinfo where id in (" +
+					"select id from bookowner where isbn ='"+isbn+"') and id <> (" +
+					"select id from userinfo where email ='"+email+"');" ;
+		Hashtable<Integer,String> ownerTable=new Hashtable<Integer,String>();
+		 try{
+			 Statement stmt=con.createStatement();
+			 ResultSet rs=stmt.executeQuery(sql);
+			 
+			 while(rs.next()){
+				 
+				
+				 ownerTable.put(rs.getInt("id"), rs.getString("nickname"));
+				
+			 }
+		 }catch(Exception e){
+			 e.printStackTrace();
+		 }
+		 return ownerTable;
 		
 	}
 	

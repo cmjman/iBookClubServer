@@ -74,4 +74,14 @@
     <servlet-name>SearchBookServlet</servlet-name>
     <url-pattern>/SearchBookServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>BorrowBookServlet</display-name>
+    <servlet-name>BorrowBookServlet</servlet-name>
+    <servlet-class>com.shining.ibookclubserver.servlet.BorrowBookServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BorrowBookServlet</servlet-name>
+    <url-pattern>/BorrowBookServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
