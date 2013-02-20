@@ -93,19 +93,23 @@ public class BookDao {
     	 return -1;
      }
 	
-	public void setOwner(String email){
+	public void setOwnerInfo(String email,String latitude,String longitude){
    	 
-		String sql="insert into bookowner(isbn,id)  values(?,?)";
+		String sql="insert into bookowner(isbn,id,latitude,longitude)  values(?,?,?,?)";
    	 	int id=findID(email);
    	 	try{
    	 		PreparedStatement pstmt=con.prepareStatement(sql);
    	 		pstmt.setString(1, bookBean.getIsbn());
    	 		pstmt.setInt(2, id);
+   	 		pstmt.setString(3, latitude);
+   	 		pstmt.setString(4, longitude);
    	 		pstmt.executeUpdate();
    	 	}catch(Exception e){
    	 		e.printStackTrace();
    	 	}
     }
+	
+
 	
 	public Boolean checkBook(String email,String isbn){
 		
