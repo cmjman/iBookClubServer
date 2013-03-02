@@ -1,13 +1,13 @@
 package com.shining.ibookclubserver;
 
-import java.io.IOException;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import net.sf.json.JSONObject;
+
+
 
 public class SearchBookThread extends Thread{
 
@@ -48,7 +48,7 @@ public class SearchBookThread extends Thread{
 			}  
 			
 			
-			json = new JSONObject(strResult);
+			json = JSONObject.fromObject(strResult);
 			
 			//System.out.println(json);
 			

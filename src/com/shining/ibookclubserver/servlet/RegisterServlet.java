@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.shining.ibookclubserver.UserBean;
-import com.shining.ibookclubserver.UserRegister;
+import com.shining.ibookclubserver.dao.BookDao;
 
 /**
  * Servlet implementation class RegisterServlet
@@ -45,11 +45,11 @@ public class RegisterServlet extends HttpServlet {
 		userBean.setEmail(email);
 		userBean.setPassWord(password);
 		userBean.setNickName(nickname);
-		UserRegister regist=new UserRegister();
+		BookDao dao=BookDao.getInstance();
 		try{
-		  regist.setUserBean(userBean);
+		  dao.setUserBean(userBean);
 		
-		  regist.regist();
+		  dao.regist();
 		}
 		  catch(Exception e){
 			  e.printStackTrace();

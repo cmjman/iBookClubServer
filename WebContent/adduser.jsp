@@ -1,9 +1,11 @@
 <%@ page  contentType="text/html;charset=gb2312" pageEncoding="gb2312"
- import="com.shining.ibookclubserver.*" %>
+ import="com.shining.ibookclubserver.*" 
+ %>
 <jsp:useBean id="userBean" class="com.shining.ibookclubserver.UserBean" scope="request">
 <jsp:setProperty name="userBean" property="*"/>
 </jsp:useBean>
-<jsp:useBean id="regist" class="com.shining.ibookclubserver.UserRegister" scope="request"/>
+<jsp:useBean id="dao" class="com.shining.ibookclubserver.dao.BookDao" scope="request"/> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title> 用户信息注册页面</title>
@@ -20,9 +22,10 @@ userBean.setNickName(nickname);
 
 %>
 <% try{
-  regist.setUserBean(userBean);
+
+  dao.setUserBean(userBean);
   out.println(email);
-  regist.regist();
+  dao.regist();
   out.println("注册成功");}
   catch(Exception e){
   out.println(e.getMessage());

@@ -2,14 +2,16 @@ package com.shining.ibookclubserver.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.*;
+import net.sf.json.JSONObject;
+
+
+import com.shining.ibookclubserver.dao.BookDao;
 
 
 
@@ -48,42 +50,40 @@ public class LoginServlet extends HttpServlet {
 		  
 		 System.out.println("LoginServlet:"+email1+password1);
 		  try {
-			Class.forName("com.mysql.jdbc.Driver");
-		
-		 Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/iBookClubDB","root","123456");
-		 Statement stmt=con.createStatement();
-		 String sql="select * from  userinfo where email='"+email1+"';";
-		 ResultSet rs=stmt.executeQuery(sql);
-		  if(rs.next())
-		  {
-			  String password=new String(rs.getString("password"));
-			  if(password.equals(password1))
-			  {
-			//  session.setAttribute("userid1",userid1);
-			//  response.sendRedirect("success.jsp");
-				 
-			//	Gson gson = new Gson();  
-			//	JSONObject object =gson.toJson(user1);
+	
+			  BookDao dao=BookDao.getInstance();	  
+			  
+			  String nickname=dao.checkPassword(email1,password1);
+			  JSONObject jsonObj= new JSONObject();
+			  
+			  if(nickname!="-1"){
 				
 				request.getSession(true).setAttribute("email" , email1);
+			
+				jsonObj.put("email" , email1);
+				jsonObj.put("nickname", nickname);
+				jsonObj.put("ActionResult", true);
 				
-				String nickname=new String(rs.getString("nickname"));
 				
-				JSONObject jsonObj = new JSONObject().put("email" , email1)
-													.put("nickname", nickname)
-													.put("ActionResult", true);
+				System.out.println("登陆成功");
+				
+			  }
+			  else{
+				  jsonObj.put("ActionResult", false);
+				  
+				  System.out.println("登陆失败");
+			  }
 				
 			//	String result="登陆成功！";
 				PrintWriter out = response.getWriter();
 				out.print(jsonObj.toString());
 				out.flush();
 				out.close();
+			  	
 			  
-			  }
-			  else{
-			  
-			  }
-		  } 
+		  	
+			 
+		  
 		 }
 		  catch (Exception e) {
 				

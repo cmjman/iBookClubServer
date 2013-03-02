@@ -27,7 +27,7 @@
   		dao.setBookBean(bookBean);
   		if(!dao.isBookExist())
   			dao.addBook();
-  		dao.setOwner(email);
+  		dao.setOwnerInfo(email,null,null);
   		out.println("发布成功");}
   			catch(Exception e){
   		out.println(e.getMessage());

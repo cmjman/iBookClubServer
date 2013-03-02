@@ -4,11 +4,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 import com.shining.ibookclubserver.BookBean;
+import com.shining.ibookclubserver.UserBean;
+import com.sina.sae.util.SaeUserInfo;
 
 public class BookDao {
 
@@ -18,18 +21,44 @@ public class BookDao {
 	
 	private BookBean bookBean;
 	
-	private String mysql_url="jdbc:mysql://localhost:3306/"+"iBookClubDB"+"?user="+"root"+"&password="+"123456";
+	private UserBean userBean;
+	
+	private String username=SaeUserInfo.getAccessKey();
+	private String password=SaeUserInfo.getSecretKey();
+	
+//	private String mysql_url="jdbc:mysql://localhost:3306/"+"iBookClubDB"+"?user="+"root"+"&password="+"123456";
+	
+	private String mysql_url_w="jdbc:mysql://w.rdc.sae.sina.com.cn:3307/app_ibookclubserver";
+	
+	private String mysql_url_r="jdbc:mysql://r.rdc.sae.sina.com.cn:3307/app_ibookclubserver";
 
 	private BookDao() {
 		 
+		
+       
+	}
+	
+	public Connection getConnection(Boolean read){
+		
+		Connection conn=null;
+		
 		try{
 			
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-            con = DriverManager.getConnection(mysql_url);
-        }
-        catch(Exception e){
+			if(read)
+				conn = DriverManager.getConnection(mysql_url_r,username,password);
+			else
+				conn = DriverManager.getConnection(mysql_url_w,username,password);
+            
+        }catch(Exception e){
             e.printStackTrace();
         }
+        
+        if(conn==null){
+        	System.out.println("获取数据库连接失败！");
+        }
+        
+        return conn;
 	}
 
 	public static BookDao getInstance() {
@@ -47,6 +76,7 @@ public class BookDao {
     	 String sql="select isbn from bookinfo where isbn='"+bookBean.getIsbn()+"';";
     	 
     	 try{
+    		 con=getConnection(true);
     		 Statement stmt=con.createStatement();
     		 ResultSet rs=stmt.executeQuery(sql);
     		 if(rs.next())
@@ -61,6 +91,7 @@ public class BookDao {
          
     	 String sql="insert into bookinfo(isbn,name,publisher,author,bookcover,summary,price)  values(?,?,?,?,?,?,?)";
          try{
+        	 con=getConnection(false);
         	 PreparedStatement pstmt=con.prepareStatement(sql);
              pstmt.setString(1,bookBean.getIsbn());
              pstmt.setString(2,bookBean.getBookname());
@@ -83,6 +114,7 @@ public class BookDao {
     	 
     	 String sql="select id from userinfo where email='"+email+"';";
     	 try{
+    		 con=getConnection(true);
     		 Statement stmt=con.createStatement();
     		 ResultSet rs=stmt.executeQuery(sql);
     		 if(rs.next())
@@ -98,6 +130,7 @@ public class BookDao {
 		String sql="insert into bookowner(isbn,id,latitude,longitude)  values(?,?,?,?)";
    	 	int id=findID(email);
    	 	try{
+   	 		con=getConnection(false);
    	 		PreparedStatement pstmt=con.prepareStatement(sql);
    	 		pstmt.setString(1, bookBean.getIsbn());
    	 		pstmt.setInt(2, id);
@@ -116,6 +149,7 @@ public class BookDao {
 		 String sql="select * from bookowner where isbn ='"+isbn+"' and id in (select id from userinfo where email ='"+email+"');" ;
 		 
 		 try{
+			 con=getConnection(true);
 			 Statement stmt=con.createStatement();
 			 ResultSet rs=stmt.executeQuery(sql);
 			 if(rs.next())
@@ -135,6 +169,7 @@ public class BookDao {
 					"select id from userinfo where email ='"+email+"');" ;
 		Hashtable<Integer,String> ownerTable=new Hashtable<Integer,String>();
 		 try{
+			 con=getConnection(true);
 			 Statement stmt=con.createStatement();
 			 ResultSet rs=stmt.executeQuery(sql);
 			 
@@ -156,6 +191,7 @@ public class BookDao {
 		 String sql="delete from bookowner where isbn ='"+isbn+"' and id in (select id from userinfo where email ='"+email+"');" ;
 		 
 		 try{
+			 con=getConnection(false);
 			 Statement stmt=con.createStatement();
 			 stmt.execute(sql);
 		 }catch(Exception e){
@@ -168,6 +204,7 @@ public class BookDao {
 	   	 String sql="select * from bookinfo where isbn in(select isbn from bookowner where id in(select id from userinfo where email='"+email+"'));";
 	   	 ArrayList<BookBean> bookList=new ArrayList<BookBean>();
 	   	 try{
+	   		 con=getConnection(true);
 	   		 Statement stmt=con.createStatement();
 	   		 ResultSet rs=stmt.executeQuery(sql);
 	   		 for(int i=0;rs.next();i++){
@@ -193,6 +230,7 @@ public class BookDao {
 	   	 String sql="select * from bookinfo where isbn in(select isbn from bookowner);";
 	   	 ArrayList<BookBean> bookList=new ArrayList<BookBean>();
 	   	 try{
+	   		 con=getConnection(true);
 	   		 Statement stmt=con.createStatement();
 	   		 ResultSet rs=stmt.executeQuery(sql);
 	   		 for(int i=0;rs.next();i++){
@@ -220,6 +258,7 @@ public class BookDao {
 			
 		ArrayList<BookBean> bookList=new ArrayList<BookBean>();
 	   	 try{
+	   		 con=getConnection(true);
 	   		 Statement stmt=con.createStatement();
 	   		 ResultSet rs=stmt.executeQuery(sql);
 	   		 for(int i=0;rs.next();i++){
@@ -240,4 +279,59 @@ public class BookDao {
 	   	 return bookList;
 		
 	}
+	
+	 public void setUserBean(UserBean userBean){
+         
+    	 this.userBean=userBean;
+     }
+ 
+     public void regist() throws Exception{
+           
+    	 String reg="insert into userinfo(email,password,nickname)  values(?,?,?)";
+         try{
+        	 con=getConnection(false);
+        	 PreparedStatement pstmt=con.prepareStatement(reg);
+             pstmt.setString(1,userBean.getEmail());
+             pstmt.setString(2,userBean.getPassWord());
+             pstmt.setString(3, userBean.getNickName());
+             pstmt.executeUpdate();
+         }
+         catch(Exception e){
+              
+        	 e.printStackTrace();
+         }      
+
+     }
+     
+     public String checkPassword(String email,String pw_check) throws SQLException {
+    	 
+    	 String sql="select * from  userinfo where email='"+email+"';";
+    	 
+    	 con=getConnection(true);
+    	 Statement stmt=con.createStatement();
+		 ResultSet rs=stmt.executeQuery(sql);
+		 String pw=null;
+		 String nickname=null;
+		 
+		  
+		 if(rs.next())
+		  {
+			  pw=new String(rs.getString("password"));
+		  
+		 
+			  if(pw.equals(pw_check)){
+			 
+				  nickname=new String(rs.getString("nickname"));
+				  
+			
+			  }else{
+				  nickname="-1";
+			  }
+			  System.out.println(nickname);
+		  }
+		 
+		 return nickname;
+		  
+		 
+     }
 }

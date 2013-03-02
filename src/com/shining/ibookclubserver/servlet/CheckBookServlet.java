@@ -8,8 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
+
+
 
 import com.shining.ibookclubserver.dao.BookDao;
 
@@ -49,9 +51,9 @@ public class CheckBookServlet extends HttpServlet {
 		BookDao dao=BookDao.getInstance();
 		Boolean result=dao.checkBook(email, isbn);
 		
-		JSONObject jsonObj;
+		JSONObject jsonObj=new JSONObject();
 		try {
-			jsonObj = new JSONObject().put("ActionResult", result);
+			jsonObj.put("ActionResult", result);
 		
 		
 		response.setCharacterEncoding("UTF-8");
