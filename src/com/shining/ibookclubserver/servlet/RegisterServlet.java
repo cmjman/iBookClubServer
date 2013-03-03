@@ -1,10 +1,14 @@
 package com.shining.ibookclubserver.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
 
 import com.shining.ibookclubserver.UserBean;
 import com.shining.ibookclubserver.dao.BookDao;
@@ -34,7 +38,7 @@ public class RegisterServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	
 		
 		
 	
@@ -46,14 +50,23 @@ public class RegisterServlet extends HttpServlet {
 		userBean.setPassWord(password);
 		userBean.setNickName(nickname);
 		BookDao dao=BookDao.getInstance();
+		
+		JSONObject jsonObj= new JSONObject();
 		try{
 		  dao.setUserBean(userBean);
 		
-		  dao.regist();
+		 if(dao.regist())
+		  	jsonObj.put("ActionResult", true);
+		 else
+		  	jsonObj.put("ActionResult", false);
+		  PrintWriter out = response.getWriter();
+		  out.print(jsonObj.toString());
+		  out.flush();
+		  out.close();
 		}
 		  catch(Exception e){
 			  e.printStackTrace();
-		  }
+		}
 
 		
 	}

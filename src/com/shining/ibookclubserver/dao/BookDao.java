@@ -285,7 +285,7 @@ public class BookDao {
     	 this.userBean=userBean;
      }
  
-     public void regist() throws Exception{
+     public Boolean regist() throws Exception{
            
     	 String reg="insert into userinfo(email,password,nickname)  values(?,?,?)";
          try{
@@ -295,10 +295,11 @@ public class BookDao {
              pstmt.setString(2,userBean.getPassWord());
              pstmt.setString(3, userBean.getNickName());
              pstmt.executeUpdate();
+             return true;
          }
          catch(Exception e){
-              
         	 e.printStackTrace();
+        	 return false;
          }      
 
      }
