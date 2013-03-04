@@ -98,8 +98,7 @@ public class BookDao {
              pstmt.setString(3, bookBean.getPublisher());
              pstmt.setString(4, bookBean.getAuthor());
              pstmt.setString(5, bookBean.getBookcover_url());
-             //TODO summary字段过长，待处理
-             pstmt.setString(6, null);
+             pstmt.setString(6, bookBean.getSummary());
              pstmt.setString(7, bookBean.getPrice());
              pstmt.executeUpdate();
          }
@@ -160,6 +159,27 @@ public class BookDao {
 		 }
 		 return false;
 		
+	}
+	
+	public Boolean recordBook(String email,String isbn,String nickname){
+		
+		String sql="";
+		try{
+			 con=getConnection(true);
+			 Statement stmt=con.createStatement();
+			 ResultSet rs=stmt.executeQuery(sql);
+			 
+			 while(rs.next()){
+				 
+				//TODO 借书记录，具体sql待写入
+				
+				
+			 }
+			}catch(Exception e){
+			 e.printStackTrace();
+			}
+		
+		return true;
 	}
 	
 	public Hashtable<Integer,String> borrowBook(String email,String isbn){
