@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>iBookClubServer</display-name>
   <welcome-file-list>
     <welcome-file>login.jsp</welcome-file>
@@ -93,5 +93,15 @@
   <servlet-mapping>
     <servlet-name>RecordBookServlet</servlet-name>
     <url-pattern>/RecordBookServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>GetNearbyServlet</display-name>
+    <servlet-name>GetNearbyServlet</servlet-name>
+    <servlet-class>com.shining.ibookclubserver.servlet.GetNearbyServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetNearbyServlet</servlet-name>
+    <url-pattern>/GetNearbyServlet</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -299,11 +299,98 @@ public class BookDao {
 	   	 return bookList;
 		
 	}
+
+	private static final double EARTH_RADIUS = 6378.137;
+	
+	private static double rad(double d)
+	{
+	   return d * Math.PI / 180.0;
+	}
+
+	public static double GetDistance(double lat1, double lng1, double lat2, double lng2)
+	{
+	   double radLat1 = rad(lat1);
+	   double radLat2 = rad(lat2);
+	   double a = radLat1 - radLat2;
+	   double b = rad(lng1) - rad(lng2);
+	   double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) + 
+	    Math.cos(radLat1)*Math.cos(radLat2)*Math.pow(Math.sin(b/2),2)));
+	   s = s * EARTH_RADIUS;
+	   s = Math.round(s * 10000) / 10000;
+	   return s;
+	}
+
+	
+	public ArrayList<String> getNearbyBook(String email,String latitude,String longitude){
+		
+		String sql="select * from bookowner where id <> (select id from userinfo where email ='"+email+"');";
+		
+		double lat=Double.parseDouble(latitude);
+		double lng=Double.parseDouble(longitude);	
+		ArrayList<String> bookISBN=new ArrayList<String>();
+	   	 try{
+	   		 con=getConnection(true);
+	   		 Statement stmt=con.createStatement();
+	   		 ResultSet rs=stmt.executeQuery(sql);
+	   		 for(int i=0;rs.next();i++){
+	   			 
+	   			if(GetDistance(Double.parseDouble(rs.getString("latitude")),
+	   							Double.parseDouble(rs.getString("longitude")),
+	   							lat,lng)<1.0)
+	   			bookISBN.add(rs.getString("isbn"));
+	   			
+	   			System.out.println(GetDistance(Double.parseDouble(rs.getString("latitude")),
+							Double.parseDouble(rs.getString("longitude")),
+							lat,lng));	
+	   		 }
+	   	 }catch(Exception e){
+	   		e.printStackTrace();
+	   	 }
+	   	 return bookISBN;
+		
+	}
+	
+	public ArrayList<BookBean> getBookByIsbn(ArrayList<String> isbn){
+		
+		ArrayList<BookBean> bookList=new ArrayList<BookBean>();
+		
+		for(String is:isbn){
+		
+		String sql="select * from bookinfo where isbn = '"+is+"';";
+			
+	
+	   	 try{
+	   		 con=getConnection(true);
+	   		 Statement stmt=con.createStatement();
+	   		 ResultSet rs=stmt.executeQuery(sql);
+	   		 for(int i=0;rs.next();i++){
+	   			 
+	   			BookBean bean=new BookBean();
+	   			bean.setIsbn(rs.getString("isbn"));
+	   			bean.setAuthor(rs.getString("author"));
+	   			bean.setBookcover_url(rs.getString("bookcover"));
+	   			bean.setPublisher(rs.getString("publisher"));
+	   			bean.setPrice(rs.getString("price"));
+	   			bean.setBookname(rs.getString("name"));
+	   			bean.setSummary(rs.getString("summary"));
+	   			bookList.add(bean);
+	   		 }
+	   	 }catch(Exception e){
+	   		e.printStackTrace();
+	   	 }
+		}
+	   	 
+	   	return bookList;
+		
+	}
 	
 	 public void setUserBean(UserBean userBean){
          
     	 this.userBean=userBean;
      }
+	 
+	 
+	 
  
      public Boolean regist() throws Exception{
            

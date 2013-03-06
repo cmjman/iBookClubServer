@@ -2,28 +2,28 @@ package com.shining.ibookclubserver.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+import com.shining.ibookclubserver.BookBean;
 import com.shining.ibookclubserver.dao.BookDao;
 
-import net.sf.json.JSONException;
-import net.sf.json.JSONObject;
-
-
 /**
- * Servlet implementation class CheckBookServlet
+ * Servlet implementation class GetNearbyServlet
  */
-public class CheckBookServlet extends HttpServlet {
+public class GetNearbyServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CheckBookServlet() {
+    public GetNearbyServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -39,33 +39,40 @@ public class CheckBookServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		
 		
 		request.setCharacterEncoding("UTF-8");
-	String	email=request.getParameter("email");
+		String	email=new String(request.getParameter("email"));
+			
+		String	latitude=new String(request.getParameter("latitude"));
 		
-	String	isbn=new String(request.getParameter("isbn"));
+		String 	longitude =new String(request.getParameter("longitude"));
 		
 		BookDao dao=BookDao.getInstance();
-		Boolean result=dao.checkBook(email, isbn);
+		ArrayList<BookBean> list;
+		Gson gson_response=new Gson();
 		
-		JSONObject jsonObj=new JSONObject();
+		ArrayList<String> isbn=new ArrayList<String>();
+		
+		isbn=dao.getNearbyBook(email, latitude, longitude);
+		
+		list=dao.getBookByIsbn(isbn);
+		
 		try {
-			jsonObj.put("ActionResult", result);
+			
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			
+			System.out.println("GetNearbyServlet:"+gson_response.toJson(list));
+			
+			out.print(gson_response.toJson(list));
+			out.flush();
+			out.close();
 		
-		
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		out.print(jsonObj);
-		out.flush();
-		out.close();
-		
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			
 			e.printStackTrace();
 		}
+		
 	}
 
 }
