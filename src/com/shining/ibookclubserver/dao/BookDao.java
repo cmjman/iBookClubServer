@@ -1,12 +1,17 @@
 package com.shining.ibookclubserver.dao;
 
 import java.sql.Connection;
+
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
+
 import java.util.Hashtable;
 
 import com.shining.ibookclubserver.BookBean;
@@ -34,7 +39,54 @@ public class BookDao {
 
 	private BookDao() {
 		 
-		
+		 String sql="create database app_ibookclubserver if not exists;"+
+		 
+				 	"create table if not exists " +
+		 			"bookinfo(isbn char(13) primary key," +
+		 			"name varchar(128) not null,"+
+		 			"author varchar(128) not null," +
+		 			"publisher varchar(128) not null," +
+		 			"bookcover varchar(128)," +
+		 			"summary longtext,"+
+		 			"price varchar(10)"+
+		 			");"+
+		 
+		 			"create table if not exists" +
+		 			"bookowner(bookID int(11) primary key auto_increment," +
+		 			"isbn char(13) primary key," +
+		 			"id int(8) not null," +
+		 			"borrowId int(8)," +
+		 			"borrowTime date," +
+		 			"latitude varchar(32),"+
+		 			"longitude varchar(32)," +
+		 			"postTime datetime not null"+
+		 			");"+
+		 			
+		 			"create table if not exists" +
+		 			"friends(my_id int(8) primary key," +
+		 			"friend_id not null" +
+		 			");"+
+		 			
+		 			"create table if not exists" +
+		 			"userinfo(id int(8) primary key auto_increment," +
+		 			"email varchar(40) not null," +
+		 			"password varchar(20) not null," +
+		 			"nickname varchar(20) not null," +
+		 			"picture varchar(128)," +
+		 			"age int(8)," +
+		 			"sex char(1)," +
+		 			"registertime datetime"+
+		 			");";
+
+    	 try{
+    		 con=getConnection(false);
+    		 PreparedStatement pstmt=con.prepareStatement(sql);
+  
+             pstmt.executeUpdate();
+    	 }catch(Exception e){
+    		 e.printStackTrace();
+    	 }
+    
        
 	}
 	
@@ -126,7 +178,9 @@ public class BookDao {
 	
 	public void setOwnerInfo(String email,String latitude,String longitude){
    	 
-		String sql="insert into bookowner(isbn,id,latitude,longitude)  values(?,?,?,?)";
+		String sql="insert into bookowner(isbn,id,latitude,longitude,postTime)  values(?,?,?,?,?)";
+		Date date = new Date();
+		Timestamp timeStamp = new Timestamp(date.getTime());
    	 	int id=findID(email);
    	 	try{
    	 		con=getConnection(false);
@@ -135,6 +189,7 @@ public class BookDao {
    	 		pstmt.setInt(2, id);
    	 		pstmt.setString(3, latitude);
    	 		pstmt.setString(4, longitude);
+   	 		pstmt.setTimestamp(5, timeStamp);
    	 		pstmt.executeUpdate();
    	 	}catch(Exception e){
    	 		e.printStackTrace();
@@ -219,6 +274,37 @@ public class BookDao {
 		 }
 	 }
 	
+	public ArrayList<BookBean> getRecentBook(String email){
+	   	 
+	   	 String sql="select * from (" +
+	   	 		"(bookinfo inner join bookowner on bookinfo.isbn = bookowner.isbn)" +
+	   	 		"inner join userinfo on bookowner.id = userinfo.id" +
+	   	 		")order by postTime desc;"
+	   	 	;
+	   	 ArrayList<BookBean> bookList=new ArrayList<BookBean>();
+	   	 try{
+	   		 con=getConnection(true);
+	   		 Statement stmt=con.createStatement();
+	   		 ResultSet rs=stmt.executeQuery(sql);
+	   		 while(rs.next()){
+	   			BookBean bean=new BookBean();
+	   			bean.setIsbn(rs.getString("isbn"));
+	   			System.out.println("BookDao getRecentBook isbn:"+rs.getString("isbn"));
+	   			bean.setAuthor(rs.getString("author"));
+	   			bean.setBookcover_url(rs.getString("bookcover"));
+	   			bean.setPublisher(rs.getString("publisher"));
+	   			bean.setPrice(rs.getString("price"));
+	   			bean.setBookname(rs.getString("name"));
+	   			bean.setSummary(rs.getString("summary"));
+	   			bookList.add(bean);
+	   		 }
+	   	 }catch(Exception e){
+	   		e.printStackTrace();
+	   	 }
+	   	 return bookList;
+  	 
+   }
+	
 	public ArrayList<BookBean> getMyBook(String email){
    	 
 	   	 String sql="select * from bookinfo where isbn in(select isbn from bookowner where id in(select id from userinfo where email='"+email+"'));";
@@ -227,7 +313,7 @@ public class BookDao {
 	   		 con=getConnection(true);
 	   		 Statement stmt=con.createStatement();
 	   		 ResultSet rs=stmt.executeQuery(sql);
-	   		 for(int i=0;rs.next();i++){
+	   		 while(rs.next()){
 	   			BookBean bean=new BookBean();
 	   			bean.setIsbn(rs.getString("isbn"));
 	   			bean.setAuthor(rs.getString("author"));
@@ -253,7 +339,7 @@ public class BookDao {
 	   		 con=getConnection(true);
 	   		 Statement stmt=con.createStatement();
 	   		 ResultSet rs=stmt.executeQuery(sql);
-	   		 for(int i=0;rs.next();i++){
+	   		 while(rs.next()){
 	   			 
 	   			BookBean bean=new BookBean();
 	   			bean.setIsbn(rs.getString("isbn"));
