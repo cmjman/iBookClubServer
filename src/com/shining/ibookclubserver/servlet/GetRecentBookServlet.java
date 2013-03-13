@@ -46,7 +46,7 @@ public class GetRecentBookServlet extends HttpServlet {
 		BookDao dao=BookDao.getInstance();
 		ArrayList<BookBean> list;
 		Gson gson_response=new Gson();
-	
+		
 		list=dao.getRecentBook(email);
 	
 		response.setCharacterEncoding("UTF-8");
