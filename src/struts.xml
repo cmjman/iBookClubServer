@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+ <struts>
+    
+  
+    <constant name="struts.i18n.encoding" value="UTF-8"></constant>
+    <constant name="struts.enable.DynamicMethodInvocation" value="true"></constant>
+
+     <package name="ibookclubserver" namespace="" extends="json-default">
+      	<action name="" class="">
+    		<result>/login.jsp</result>
+   	 	</action>
+         <action name="login" class="com.shining.ibookclubserver.action.LoginAction" method="login">
+              <result type="json"></result>        
+        </action> 
+        <action name="register" class="com.shining.ibookclubserver.action.RegisterAction" method="register">
+              <result type="json"></result>        
+        </action> 
+         <action name="addBook" class="com.shining.ibookclubserver.action.AddBookAction" method="addBook">
+              <result type="json"></result>        
+        </action> 
+         <action name="borrowBook" class="com.shining.ibookclubserver.action.BorrowBookAction" method="borrowBook">
+              <result type="json"></result>        
+        </action> 
+         <action name="checkBook" class="com.shining.ibookclubserver.action.CheckBookAction" method="checkBook">
+              <result type="json"></result>        
+        </action> 
+        <action name="deleteBook" class="com.shining.ibookclubserver.action.DeleteBookAction" method="deleteBook">
+              <result type="json"></result>        
+        </action> 
+        <action name="getBook" class="com.shining.ibookclubserver.action.GetBookAction" method="getBook">
+              <result type="json"></result>        
+        </action> 
+        <action name="getNearby" class="com.shining.ibookclubserver.action.GetNearbyAction" method="getNearby">
+              <result type="json"></result>        
+        </action> 
+        <action name="getRecentBook" class="com.shining.ibookclubserver.action.GetRecentBookAction" method="getRecentBook">
+              <result type="json"></result>        
+        </action> 
+        <action name="recordBook" class="com.shining.ibookclubserver.action.RecordBookAction" method="recordBook">
+              <result type="json"></result>        
+        </action> 
+        <action name="searchBook" class="com.shining.ibookclubserver.action.SearchBookAction" method="searchBook">
+              <result type="json"></result>        
+        </action> 
+     </package> 
+ </struts>

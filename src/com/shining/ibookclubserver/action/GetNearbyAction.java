@@ -1,48 +1,43 @@
-package com.shining.ibookclubserver.servlet;
+package com.shining.ibookclubserver.action;
 
-import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.ServletResponseAware;
+
 import com.google.gson.Gson;
+import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.BookBean;
 import com.shining.ibookclubserver.dao.BookDao;
 
-/**
- * Servlet implementation class GetNearbyServlet
- */
-public class GetNearbyServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GetNearbyServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+public class GetNearbyAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+
+	private static final long serialVersionUID = 1L;
+	private HttpServletRequest request;
+	private HttpServletResponse response;
+
+	public void setServletResponse(HttpServletResponse response) {
+		
+		this.response=response;
+        this.response.setCharacterEncoding("UTF-8");
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	public void setServletRequest(HttpServletRequest request) {
 		
-		request.setCharacterEncoding("UTF-8");
+		this.request=request;
+	}
+	
+	public void getNearby(){
+		
 		String	email=new String(request.getParameter("email"));
-			
+		
 		String	latitude=new String(request.getParameter("latitude"));
 		
 		String 	longitude =new String(request.getParameter("longitude"));
@@ -74,5 +69,4 @@ public class GetNearbyServlet extends HttpServlet {
 		}
 		
 	}
-
 }

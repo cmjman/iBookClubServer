@@ -31,7 +31,9 @@ public class BookDao {
 	private String username=SaeUserInfo.getAccessKey();
 	private String password=SaeUserInfo.getSecretKey();
 	
-//	private String mysql_url="jdbc:mysql://localhost:3306/"+"iBookClubDB"+"?user="+"root"+"&password="+"123456";
+//	private String mysql_url_w="jdbc:mysql://localhost:3306/"+"iBookClubDB"+"?user="+"root"+"&password="+"123456";
+	
+//	private String mysql_url_r="jdbc:mysql://localhost:3306/"+"iBookClubDB"+"?user="+"root"+"&password="+"123456";
 	
 	private String mysql_url_w="jdbc:mysql://w.rdc.sae.sina.com.cn:3307/app_ibookclubserver";
 	

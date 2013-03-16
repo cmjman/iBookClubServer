@@ -1,30 +1,22 @@
-package com.shining.ibookclubserver.servlet;
+package com.shining.ibookclubserver.action;
 
-import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import net.sf.json.JSONObject;
 
-
-
+import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.google.gson.Gson;
+import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.BookBean;
-
 import com.shining.ibookclubserver.dao.BookDao;
 
-/**
- * Servlet implementation class AddBookServlet
- */
-public class AddBookServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+public class AddBookAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 	
 	public String isbn;
 	public String email;
@@ -32,28 +24,27 @@ public class AddBookServlet extends HttpServlet {
 	public String author;
 	public String publisher;
 	public BookBean bookbean=new BookBean();
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public AddBookServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	
+	private static final long serialVersionUID = 1L;
+	private HttpServletRequest request;
+	private HttpServletResponse response;
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	@Override
+	public void setServletResponse(HttpServletResponse response) {
+		
+		this.response=response;
+        this.response.setCharacterEncoding("UTF-8");
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	public void setServletRequest(HttpServletRequest request) {
+		
+		this.request=request;
+	}
 	
-		request.setCharacterEncoding("UTF-8");
+	public void  addBook(){ 
+		
+	
 		email=request.getParameter("email");
 		String latitude=request.getParameter("latitude");
 		String longitude=request.getParameter("longitude");
@@ -70,19 +61,10 @@ public class AddBookServlet extends HttpServlet {
 			if(!dao.isBookExist())
 				dao.addBook();
 			dao.setOwnerInfo(email,latitude,longitude);
-			
-			
-		
-		//	ArrayList<BookBean> list=dao.getMyBook(email);
-			
-		//	Gson gson_response=new Gson();
-		
-			
 		
 			JSONObject jsonObj=new JSONObject();
 	
 			jsonObj.put("ActionResult", true);
-			response.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			
 			System.out.println("AddBookServlet:True");
@@ -96,11 +78,6 @@ public class AddBookServlet extends HttpServlet {
 		
 			e.printStackTrace();
 		}
-		
-	
-		
-		
-		
 	}
-
+	
 }
