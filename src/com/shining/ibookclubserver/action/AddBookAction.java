@@ -12,23 +12,29 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.BookBean;
 import com.shining.ibookclubserver.dao.BookDao;
 
 public class AddBookAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 	
-	public String isbn;
-	public String email;
-	public String name;
-	public String author;
-	public String publisher;
-	public BookBean bookbean=new BookBean();
+	//public String isbn;
+	private String email;
+	private String latitude;
+	private String longitude;
+//	private String bookbean_gson;
+//	public String name;
+//	public String author;
+//	public String publisher;
+	private BookBean bookbean=new BookBean();
+	
 	
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 
+	
 	@Override
 	public void setServletResponse(HttpServletResponse response) {
 		
@@ -42,20 +48,46 @@ public class AddBookAction  extends ActionSupport implements ServletRequestAware
 		this.request=request;
 	}
 	
+	public void setEmail(String email){
+		
+		this.email=email;
+	}
+	
+	public String getEmail(){
+		
+		return email;
+	}
+	
+	public void setLatitude(String latitude){
+		this.latitude=latitude;
+	}
+	
+	public String getLatitude(){
+		return latitude;
+	}
+	
+	public void setLongitude(String longitude){
+		this.longitude=longitude;
+	}
+	
+	public String getLongitude(){
+		return longitude;
+	}
+	
+	
 	public void  addBook(){ 
 		
-	
-		email=request.getParameter("email");
-		String latitude=request.getParameter("latitude");
-		String longitude=request.getParameter("longitude");
-		
+		System.out.println(request.getParameter("bookbean_gson"));
 		
 		Gson gson=new Gson();
-		bookbean=gson.fromJson(request.getParameter("bookbean"),BookBean.class);
+		bookbean=gson.fromJson(request.getParameter("bookbean_gson"),BookBean.class);
 		
+		System.out.println(bookbean.getIsbn());
 		
 		BookDao dao=BookDao.getInstance();
+	
 		dao.setBookBean(bookbean);
+		
 		
 		try {
 			if(!dao.isBookExist())

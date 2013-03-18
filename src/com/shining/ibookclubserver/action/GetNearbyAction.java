@@ -21,6 +21,10 @@ public class GetNearbyAction  extends ActionSupport implements ServletRequestAwa
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	
+	private String email;
+	private String latitude;
+	private String longitude;
 
 	public void setServletResponse(HttpServletResponse response) {
 		
@@ -34,13 +38,35 @@ public class GetNearbyAction  extends ActionSupport implements ServletRequestAwa
 		this.request=request;
 	}
 	
+	public void setEmail(String email){
+		
+		this.email=email;
+	}
+	
+	public String getEmail(){
+		
+		return email;
+	}
+	
+	public void setLatitude(String latitude){
+		this.latitude=latitude;
+	}
+	
+	public String getLatitude(){
+		return latitude;
+	}
+	
+	public void setLongitude(String longitude){
+		this.longitude=longitude;
+	}
+	
+	public String getLongitude(){
+		return longitude;
+	}
+	
 	public void getNearby(){
 		
-		String	email=new String(request.getParameter("email"));
-		
-		String	latitude=new String(request.getParameter("latitude"));
-		
-		String 	longitude =new String(request.getParameter("longitude"));
+		System.out.println("getNearby Location:"+latitude+longitude);
 		
 		BookDao dao=BookDao.getInstance();
 		ArrayList<BookBean> list;
@@ -54,10 +80,9 @@ public class GetNearbyAction  extends ActionSupport implements ServletRequestAwa
 		
 		try {
 			
-			response.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			
-			System.out.println("GetNearbyServlet:"+gson_response.toJson(list));
+			System.out.println("GetNearbyAction:"+gson_response.toJson(list));
 			
 			out.print(gson_response.toJson(list));
 			out.flush();

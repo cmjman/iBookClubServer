@@ -2,6 +2,8 @@ package com.shining.ibookclubserver.action;
 
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +24,9 @@ public class LoginAction  extends ActionSupport implements ServletRequestAware,S
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	
+	private String email;
+	private String password;
 
 	@Override
 	public void setServletResponse(HttpServletResponse response) {
@@ -36,36 +41,54 @@ public class LoginAction  extends ActionSupport implements ServletRequestAware,S
 		this.request=request;
 	}
 	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
 	public void  login(){  
 		
-		String email=new String(request.getParameter("email"));
-		String password=new String(request.getParameter("password"));
 	
 		System.out.println("LoginAction:"+email+password);
 		
 		try {
 			
-			BookDao dao=BookDao.getInstance();	  
+			BookDao dao=BookDao.getInstance();	
 			String nickname=dao.checkPassword(email,password);
-			JSONObject jsonObj= new JSONObject();
-			  
+			Map<String,String> json=new HashMap<String,String>();  
 			if(nickname!="-1"){
 				
 				request.getSession(true).setAttribute("email" , email);
-				jsonObj.put("email" , email);
-				jsonObj.put("nickname", nickname);
-				jsonObj.put("ActionResult", true);
+				
+				
+				
+				json.put("email" , email);
+				json.put("nickname", nickname);
+				json.put("ActionResult", "true");
 				System.out.println("登陆成功");
 				
 			}
 			else{
 				 
-				jsonObj.put("ActionResult", false);
+				json.put("ActionResult", "false");
 				System.out.println("登陆失败");
 			}
+			
+			//byte[] jsonBytes = json.toString().getBytes("utf-8");  
 
 			PrintWriter out = response.getWriter();
-			out.print(jsonObj.toString());
+			out.print(json.toString());
 			out.flush();
 			out.close();
 		}

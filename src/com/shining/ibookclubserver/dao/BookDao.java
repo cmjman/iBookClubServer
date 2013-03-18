@@ -20,7 +20,7 @@ import com.sina.sae.util.SaeUserInfo;
 
 public class BookDao {
 
-	private static BookDao dao =new BookDao();
+	private static BookDao dao=new BookDao();
 	
 	private Connection con;
 	
@@ -28,68 +28,83 @@ public class BookDao {
 	
 	private UserBean userBean;
 	
+
+//	private String username="root";
+	
+//	private String password="123456";
+	
+//	private String mysql_url_w="jdbc:mysql://localhost:3306/app_ibookclubserver";
+	
+//	private String mysql_url_r="jdbc:mysql://localhost:3306/app_ibookclubserver";
+	
 	private String username=SaeUserInfo.getAccessKey();
 	private String password=SaeUserInfo.getSecretKey();
-	
-//	private String mysql_url_w="jdbc:mysql://localhost:3306/"+"iBookClubDB"+"?user="+"root"+"&password="+"123456";
-	
-//	private String mysql_url_r="jdbc:mysql://localhost:3306/"+"iBookClubDB"+"?user="+"root"+"&password="+"123456";
 	
 	private String mysql_url_w="jdbc:mysql://w.rdc.sae.sina.com.cn:3307/app_ibookclubserver";
 	
 	private String mysql_url_r="jdbc:mysql://r.rdc.sae.sina.com.cn:3307/app_ibookclubserver";
 
-	private BookDao() {
+	public BookDao() {
+		
+		//TODO 此处SQL在navicat中运行正常，直接用JDBC注入则会出错，待修正 
+		//com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; 
+		//check the manual that corresponds to your MySQL server version for the right syntax to use 
+		//near 'create table if not exists bookinfo(isbn char(13),primary key(isbn),name varchar' at line 1
+		 String sql="CREATE DATABASE IF NOT EXISTS `app_ibookclubserver`;"+
+		
+					"CREATE TABLE IF NOT EXISTS `bookinfo` ("+
+					" `isbn` char(13) NOT NULL,"+
+					" `name` varchar(128) NOT NULL,"+
+					" `author` varchar(128) NOT NULL,"+
+					" `publisher` varchar(128) NOT NULL,"+
+					" `bookcover` varchar(128) DEFAULT NULL,"+
+					" `summary` longtext,"+
+					" `price` varchar(10) DEFAULT NULL,"+
+					" PRIMARY KEY (`isbn`)"+
+					") ENGINE=MyISAM DEFAULT CHARSET=utf8;"+
 		 
-		 String sql="create database app_ibookclubserver if not exists;"+
-		 
-				 	"create table if not exists " +
-		 			"bookinfo(isbn char(13) primary key," +
-		 			"name varchar(128) not null,"+
-		 			"author varchar(128) not null," +
-		 			"publisher varchar(128) not null," +
-		 			"bookcover varchar(128)," +
-		 			"summary longtext,"+
-		 			"price varchar(10)"+
-		 			");"+
-		 
-		 			"create table if not exists" +
-		 			"bookowner(bookID int(11) primary key auto_increment," +
-		 			"isbn char(13) primary key," +
-		 			"id int(8) not null," +
-		 			"borrowId int(8)," +
-		 			"borrowTime date," +
-		 			"latitude varchar(32),"+
-		 			"longitude varchar(32)," +
-		 			"postTime datetime not null"+
-		 			");"+
-		 			
-		 			"create table if not exists" +
-		 			"friends(my_id int(8) primary key," +
-		 			"friend_id not null" +
-		 			");"+
-		 			
-		 			"create table if not exists" +
-		 			"userinfo(id int(8) primary key auto_increment," +
-		 			"email varchar(40) not null," +
-		 			"password varchar(20) not null," +
-		 			"nickname varchar(20) not null," +
-		 			"picture varchar(128)," +
-		 			"age int(8)," +
-		 			"sex char(1)," +
-		 			"registertime datetime"+
-		 			");";
+					"CREATE TABLE IF NOT EXISTS `bookowner` ("+
+					"`bookID` int(11) NOT NULL AUTO_INCREMENT,"+
+					"`isbn` char(13) NOT NULL,"+
+					"`id` int(8) NOT NULL,"+
+					"`borrowId` int(8) DEFAULT NULL,"+
+					"`borrowTime` date DEFAULT NULL,"+
+					"`latitude` varchar(32) DEFAULT NULL,"+
+					"`longitude` varchar(32) DEFAULT NULL,"+
+					"`postTime` datetime NOT NULL,"+
+					"PRIMARY KEY (`bookID`,`isbn`),"+
+					"KEY `postTime` (`postTime`)"+
+					") ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;"+
 
+		 			
+					"CREATE TABLE IF NOT EXISTS `friends` ("+
+					"`my_id` int(8) NOT NULL,"+
+					"`friend_id` int(8) NOT NULL,"+
+					"PRIMARY KEY (`my_id`)"+
+					") ENGINE=MyISAM DEFAULT CHARSET=utf8;"+
+
+		 			
+		   			" CREATE TABLE IF NOT EXISTS `userinfo` ("+
+		   			"`id` int(8) NOT NULL AUTO_INCREMENT,"+
+		   			" `email` varchar(40) NOT NULL,"+
+		   			" `password` varchar(20) NOT NULL,"+
+		   			" `nickname` varchar(20) NOT NULL,"+
+		   			" `picture` varchar(128) DEFAULT NULL,"+
+		   			" `age` int(8) DEFAULT NULL,"+
+		   			"`sex` char(1) DEFAULT NULL,"+
+		   			" `registertime` datetime DEFAULT NULL,"+
+		   			" PRIMARY KEY (`id`)"+
+		   			") ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;";
+		
     	 try{
     		 con=getConnection(false);
+    	
     		 PreparedStatement pstmt=con.prepareStatement(sql);
   
              pstmt.executeUpdate();
     	 }catch(Exception e){
     		 e.printStackTrace();
     	 }
-    
-       
 	}
 	
 	public Connection getConnection(Boolean read){

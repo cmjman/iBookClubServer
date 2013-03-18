@@ -19,6 +19,9 @@ public class BorrowBookAction extends ActionSupport implements ServletRequestAwa
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	
+	private String email;
+	private String isbn;
 
 	@Override
 	public void setServletResponse(HttpServletResponse response) {
@@ -33,12 +36,23 @@ public class BorrowBookAction extends ActionSupport implements ServletRequestAwa
 		this.request=request;
 	}
 	
-	public void borrowBook(){
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
 	
-		
-		String	email=new String(request.getParameter("email"));
-			
-		String	isbn=new String(request.getParameter("isbn"));
+	public void borrowBook(){
 		
 		BookDao dao=BookDao.getInstance();
 		Hashtable<Integer,String> ownerList=dao.borrowBook(email, isbn);
@@ -61,4 +75,6 @@ public class BorrowBookAction extends ActionSupport implements ServletRequestAwa
 		}
 	
 	}
+
+
 }

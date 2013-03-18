@@ -19,6 +19,10 @@ public class RecordBookAction  extends ActionSupport implements ServletRequestAw
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	
+	private String email;
+	private String isbn;
+	private String nickname;
 
 	public void setServletResponse(HttpServletResponse response) {
 		
@@ -32,11 +36,32 @@ public class RecordBookAction  extends ActionSupport implements ServletRequestAw
 		this.request=request;
 	}
 	
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
 	public void recordBook(){
-		
-		String	email=new String(request.getParameter("email"));
-		String 	isbn=new String(request.getParameter("isbn"));	
-		String	nickname=new String(request.getParameter("nickname"));
 		
 		BookDao dao=BookDao.getInstance();
 	

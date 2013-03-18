@@ -20,6 +20,10 @@ public class CheckBookAction  extends ActionSupport implements ServletRequestAwa
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	
+	
+	private String email;
+	private String isbn;
 
 	public void setServletResponse(HttpServletResponse response) {
 		
@@ -32,12 +36,24 @@ public class CheckBookAction  extends ActionSupport implements ServletRequestAwa
 		
 		this.request=request;
 	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
 
 	public void checkBook(){
-		
-			String	email=request.getParameter("email");
-			
-			String	isbn=new String(request.getParameter("isbn"));
 			
 			BookDao dao=BookDao.getInstance();
 			Boolean result=dao.checkBook(email, isbn);

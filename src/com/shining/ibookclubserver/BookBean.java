@@ -1,6 +1,8 @@
 package com.shining.ibookclubserver;
 
-public class BookBean {
+import java.io.Serializable;
+
+public class BookBean implements Serializable{
 
 	private String isbn;
 	private String bookname;

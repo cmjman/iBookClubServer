@@ -37,12 +37,24 @@ public class DeleteBookAction extends ActionSupport implements ServletRequestAwa
 		this.request=request;
 	}
 	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
+	
 	public void deleteBook() throws IOException{
 		
-	
-		email=request.getParameter("email");
-		
-		isbn=new String(request.getParameter("isbn"));
 		
 		BookDao dao=BookDao.getInstance();
 		dao.deleteBook(email, isbn);

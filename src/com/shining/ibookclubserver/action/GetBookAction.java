@@ -21,6 +21,8 @@ public class GetBookAction extends ActionSupport implements ServletRequestAware,
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	
+	private String email;
 
 	public void setServletResponse(HttpServletResponse response) {
 		
@@ -34,9 +36,17 @@ public class GetBookAction extends ActionSupport implements ServletRequestAware,
 		this.request=request;
 	}
 	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public void getBook(){
 		
-		String email=request.getParameter("email");
+	//	String email=request.getParameter("email");
 		
 		BookDao dao=BookDao.getInstance();
 		ArrayList<BookBean> list;
