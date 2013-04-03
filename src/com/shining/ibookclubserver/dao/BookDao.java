@@ -14,8 +14,9 @@ import java.util.Date;
 
 import java.util.Hashtable;
 
-import com.shining.ibookclubserver.BookBean;
-import com.shining.ibookclubserver.UserBean;
+import com.shining.ibookclubserver.FinalConstants;
+import com.shining.ibookclubserver.bean.BookBean;
+import com.shining.ibookclubserver.bean.UserBean;
 import com.sina.sae.util.SaeUserInfo;
 
 public class BookDao {
@@ -29,77 +30,18 @@ public class BookDao {
 	private UserBean userBean;
 	
 
-//	private String username="root";
-	
-//	private String password="123456";
-	
-//	private String mysql_url_w="jdbc:mysql://localhost:3306/app_ibookclubserver";
-	
-//	private String mysql_url_r="jdbc:mysql://localhost:3306/app_ibookclubserver";
-	
-	private String username=SaeUserInfo.getAccessKey();
-	private String password=SaeUserInfo.getSecretKey();
-	
-	private String mysql_url_w="jdbc:mysql://w.rdc.sae.sina.com.cn:3307/app_ibookclubserver";
-	
-	private String mysql_url_r="jdbc:mysql://r.rdc.sae.sina.com.cn:3307/app_ibookclubserver";
-
 	public BookDao() {
 		
 		//TODO 此处SQL在navicat中运行正常，直接用JDBC注入则会出错，待修正 
 		//com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; 
 		//check the manual that corresponds to your MySQL server version for the right syntax to use 
 		//near 'create table if not exists bookinfo(isbn char(13),primary key(isbn),name varchar' at line 1
-		 String sql="CREATE DATABASE IF NOT EXISTS `app_ibookclubserver`;"+
 		
-					"CREATE TABLE IF NOT EXISTS `bookinfo` ("+
-					" `isbn` char(13) NOT NULL,"+
-					" `name` varchar(128) NOT NULL,"+
-					" `author` varchar(128) NOT NULL,"+
-					" `publisher` varchar(128) NOT NULL,"+
-					" `bookcover` varchar(128) DEFAULT NULL,"+
-					" `summary` longtext,"+
-					" `price` varchar(10) DEFAULT NULL,"+
-					" PRIMARY KEY (`isbn`)"+
-					") ENGINE=MyISAM DEFAULT CHARSET=utf8;"+
-		 
-					"CREATE TABLE IF NOT EXISTS `bookowner` ("+
-					"`bookID` int(11) NOT NULL AUTO_INCREMENT,"+
-					"`isbn` char(13) NOT NULL,"+
-					"`id` int(8) NOT NULL,"+
-					"`borrowId` int(8) DEFAULT NULL,"+
-					"`borrowTime` date DEFAULT NULL,"+
-					"`latitude` varchar(32) DEFAULT NULL,"+
-					"`longitude` varchar(32) DEFAULT NULL,"+
-					"`postTime` datetime NOT NULL,"+
-					"PRIMARY KEY (`bookID`,`isbn`),"+
-					"KEY `postTime` (`postTime`)"+
-					") ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;"+
-
-		 			
-					"CREATE TABLE IF NOT EXISTS `friends` ("+
-					"`my_id` int(8) NOT NULL,"+
-					"`friend_id` int(8) NOT NULL,"+
-					"PRIMARY KEY (`my_id`)"+
-					") ENGINE=MyISAM DEFAULT CHARSET=utf8;"+
-
-		 			
-		   			" CREATE TABLE IF NOT EXISTS `userinfo` ("+
-		   			"`id` int(8) NOT NULL AUTO_INCREMENT,"+
-		   			" `email` varchar(40) NOT NULL,"+
-		   			" `password` varchar(20) NOT NULL,"+
-		   			" `nickname` varchar(20) NOT NULL,"+
-		   			" `picture` varchar(128) DEFAULT NULL,"+
-		   			" `age` int(8) DEFAULT NULL,"+
-		   			"`sex` char(1) DEFAULT NULL,"+
-		   			" `registertime` datetime DEFAULT NULL,"+
-		   			" PRIMARY KEY (`id`)"+
-		   			") ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;";
 		
     	 try{
     		 con=getConnection(false);
     	
-    		 PreparedStatement pstmt=con.prepareStatement(sql);
+    		 PreparedStatement pstmt=con.prepareStatement(FinalConstants.SQL_CREATE);
   
              pstmt.executeUpdate();
     	 }catch(Exception e){
@@ -113,11 +55,11 @@ public class BookDao {
 		
 		try{
 			
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Class.forName(FinalConstants.DB_DRIVER).newInstance();
 			if(read)
-				conn = DriverManager.getConnection(mysql_url_r,username,password);
+				conn = DriverManager.getConnection(FinalConstants.DB_URL_R,FinalConstants.DB_USERNAME,FinalConstants.DB_PASSWORD);
 			else
-				conn = DriverManager.getConnection(mysql_url_w,username,password);
+				conn = DriverManager.getConnection(FinalConstants.DB_URL_W,FinalConstants.DB_USERNAME,FinalConstants.DB_PASSWORD);
             
         }catch(Exception e){
             e.printStackTrace();
@@ -158,10 +100,10 @@ public class BookDao {
 	
 	public void addBook() throws Exception{
          
-    	 String sql="insert into bookinfo(isbn,name,publisher,author,bookcover,summary,price)  values(?,?,?,?,?,?,?)";
+    	
          try{
         	 con=getConnection(false);
-        	 PreparedStatement pstmt=con.prepareStatement(sql);
+        	 PreparedStatement pstmt=con.prepareStatement(FinalConstants.SQL_INSERT_BOOKINFO);
              pstmt.setString(1,bookBean.getIsbn());
              pstmt.setString(2,bookBean.getBookname());
              pstmt.setString(3, bookBean.getPublisher());
@@ -193,20 +135,20 @@ public class BookDao {
     	 return -1;
      }
 	
-	public void setOwnerInfo(String email,String latitude,String longitude){
+	public void setOwnerInfo(String email,String latitude,String longitude,String rating){
    	 
-		String sql="insert into bookowner(isbn,id,latitude,longitude,postTime)  values(?,?,?,?,?)";
 		Date date = new Date();
 		Timestamp timeStamp = new Timestamp(date.getTime());
    	 	int id=findID(email);
    	 	try{
    	 		con=getConnection(false);
-   	 		PreparedStatement pstmt=con.prepareStatement(sql);
+   	 		PreparedStatement pstmt=con.prepareStatement(FinalConstants.SQL_INSERT_BOOKOWNER);
    	 		pstmt.setString(1, bookBean.getIsbn());
    	 		pstmt.setInt(2, id);
    	 		pstmt.setString(3, latitude);
    	 		pstmt.setString(4, longitude);
    	 		pstmt.setTimestamp(5, timeStamp);
+   	 		pstmt.setFloat(6, Float.parseFloat(rating));
    	 		pstmt.executeUpdate();
    	 	}catch(Exception e){
    	 		e.printStackTrace();
@@ -350,12 +292,12 @@ public class BookDao {
 	
 	public ArrayList<BookBean> getPublicBook(){
    	 
-	   	 String sql="select * from bookinfo where isbn in(select isbn from bookowner);";
+	   	
 	   	 ArrayList<BookBean> bookList=new ArrayList<BookBean>();
 	   	 try{
 	   		 con=getConnection(true);
 	   		 Statement stmt=con.createStatement();
-	   		 ResultSet rs=stmt.executeQuery(sql);
+	   		 ResultSet rs=stmt.executeQuery(FinalConstants.SQL_SELECT_BOOKINFO);
 	   		 while(rs.next()){
 	   			 
 	   			BookBean bean=new BookBean();
@@ -497,13 +439,17 @@ public class BookDao {
  
      public Boolean regist() throws Exception{
            
-    	 String reg="insert into userinfo(email,password,nickname)  values(?,?,?)";
+    	 
          try{
         	 con=getConnection(false);
-        	 PreparedStatement pstmt=con.prepareStatement(reg);
+        	 PreparedStatement pstmt=con.prepareStatement(FinalConstants.SQL_INSERT_USERINFO);
              pstmt.setString(1,userBean.getEmail());
              pstmt.setString(2,userBean.getPassWord());
              pstmt.setString(3, userBean.getNickName());
+             pstmt.setString(4, userBean.getAge());
+             pstmt.setString(5, userBean.getGender());
+             System.out.println( userBean.getGender());
+             pstmt.setString(6, userBean.getInterest());
              pstmt.executeUpdate();
              return true;
          }

@@ -2,7 +2,7 @@
     pageEncoding="utf-8"
    import="com.shining.ibookclubserver.*"  
     %>
-<jsp:useBean id="bookBean" class="com.shining.ibookclubserver.BookBean" scope="request">
+<jsp:useBean id="bookBean" class="com.shining.ibookclubserver.bean.BookBean" scope="request">
 <jsp:setProperty name="bookBean" property="*"/>
 </jsp:useBean>    
 <jsp:useBean id="dao" class="com.shining.ibookclubserver.dao.BookDao" scope="request"/>    

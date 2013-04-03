@@ -12,7 +12,7 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.shining.ibookclubserver.UserBean;
+import com.shining.ibookclubserver.bean.UserBean;
 import com.shining.ibookclubserver.dao.BookDao;
 
 public class RegisterAction extends ActionSupport implements ServletRequestAware,ServletResponseAware{
@@ -25,6 +25,25 @@ public class RegisterAction extends ActionSupport implements ServletRequestAware
 	private String email;
 	private String password;
 	private String nickname;
+	private String interest;
+	private String gender;
+	private String age;
+
+	public String getAge() {
+		return age;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
+	}
+
+	public String getInterest() {
+		return interest;
+	}
+
+	public void setInterest(String interest) {
+		this.interest = interest;
+	}
 
 	public void setServletResponse(HttpServletResponse response) {
 		
@@ -70,6 +89,9 @@ public class RegisterAction extends ActionSupport implements ServletRequestAware
 		userBean.setEmail(email);
 		userBean.setPassWord(password);
 		userBean.setNickName(nickname);
+		userBean.setInterest(interest);
+		userBean.setGender(gender);
+		userBean.setAge(age);
 		BookDao dao=BookDao.getInstance();
 		
 		JSONObject jsonObj= new JSONObject();
@@ -89,5 +111,13 @@ public class RegisterAction extends ActionSupport implements ServletRequestAware
 			  e.printStackTrace();
 		}
 
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 }

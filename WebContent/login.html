@@ -1,0 +1,70 @@
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="CSS/bootstrap.min.css" rel="stylesheet" media="screen"> 
+	<link rel=stylesheet href="CSS/button.css"/>
+	<link rel=stylesheet href="CSS/layout.css"/>
+	<script src="JS/bootstrap.min.js"></script>
+	<script src="JS/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript">
+	
+	$(document).ready( function() {  
+
+	        $("#button_login").click( function() {  
+	              
+	            var url = 'login.action';  
+	              
+	            alert("===");  
+	              
+	            var params = {  
+	                email:$("#email").val(),  
+	                password:$("#password").val(),  
+	            }  
+	            $.post(  
+	                url,       
+	                params,    
+	                function cbf(data){ 
+	                  
+	                    var member = eval("("+data+")");    
+	              		
+	                    $('#result').html("欢迎您：  "+member.nickname);  
+	                      
+	                },   
+	                  
+	                'json' 
+	              
+	            );  
+	          
+	        });  
+	          
+	    });  
+	</script>
+	</head>
+	<body>
+		
+		
+			<table>
+			<tr>
+				<td>输入用户名：</td>
+				<td><input type=text name=email ></td>
+			</tr>
+			<tr>
+				<td>输入密码：</td>
+				<td><input type=password name=password></td>
+			</tr>
+			<tr>
+				<td><input type=submit value=确认 class="button" id="button_login">
+				</td>
+			</tr>
+			</table>
+		
+		<form action="register.jsp">
+			<input type=submit value=注册 class="button">
+		</form>
+		
+		<div id="result">
+		</div>
+		
+	</body>
+</html>

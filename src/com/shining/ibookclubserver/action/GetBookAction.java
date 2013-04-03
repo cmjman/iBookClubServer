@@ -13,7 +13,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
-import com.shining.ibookclubserver.BookBean;
+import com.shining.ibookclubserver.bean.BookBean;
 import com.shining.ibookclubserver.dao.BookDao;
 
 public class GetBookAction extends ActionSupport implements ServletRequestAware,ServletResponseAware{

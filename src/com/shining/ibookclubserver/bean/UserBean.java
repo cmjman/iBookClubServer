@@ -1,4 +1,4 @@
-package com.shining.ibookclubserver;
+package com.shining.ibookclubserver.bean;
 
 public class UserBean {
 
@@ -8,9 +8,37 @@ public class UserBean {
 	  
 	  private String nickname;
 	  
-	//  private static int IDcount=0;
+	  private String interest;
+	  
+	  private String gender;
+	  
+	  private String age;
        
-	  public void setEmail(String email){
+	public String getAge() {
+		return age;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getInterest() {
+		return interest;
+	}
+
+	public void setInterest(String interest) {
+		this.interest = interest;
+	}
+
+	public void setEmail(String email){
           
 		  this.email=email;
       }

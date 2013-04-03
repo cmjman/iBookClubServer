@@ -45,5 +45,9 @@
         <action name="searchBook" class="com.shining.ibookclubserver.action.SearchBookAction" method="searchBook">
               <result type="json"></result>        
         </action> 
+        
+         <action name="getRecommend" class="com.shining.ibookclubserver.action.GerRecommendAction" method="getRecommend">
+              <result type="json"></result>        
+        </action> 
      </package> 
  </struts>

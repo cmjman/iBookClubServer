@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.shining.ibookclubserver.bean.BookBean;
+
 import net.sf.json.JSONObject;
 
 

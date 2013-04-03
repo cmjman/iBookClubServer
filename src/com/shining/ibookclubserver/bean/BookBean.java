@@ -1,4 +1,4 @@
-package com.shining.ibookclubserver;
+package com.shining.ibookclubserver.bean;
 
 import java.io.Serializable;
 

@@ -1,7 +1,7 @@
 <%@ page  contentType="text/html;charset=gb2312" pageEncoding="gb2312"
  import="com.shining.ibookclubserver.*" 
  %>
-<jsp:useBean id="userBean" class="com.shining.ibookclubserver.UserBean" scope="request">
+<jsp:useBean id="userBean" class="com.shining.ibookclubserver.bean.UserBean" scope="request">
 <jsp:setProperty name="userBean" property="*"/>
 </jsp:useBean>
 <jsp:useBean id="dao" class="com.shining.ibookclubserver.dao.BookDao" scope="request"/> 
