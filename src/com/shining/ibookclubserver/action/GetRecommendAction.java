@@ -17,7 +17,7 @@ public class GetRecommendAction extends ActionSupport implements ServletRequestA
 	private String email;
 	
 	@Override
-	public void setServletResponse(HttpServletResponse arg0) {
+	public void setServletResponse(HttpServletResponse response) {
 		
 		this.response=response;
         this.response.setCharacterEncoding("UTF-8");
@@ -25,7 +25,7 @@ public class GetRecommendAction extends ActionSupport implements ServletRequestA
 	}
 
 	@Override
-	public void setServletRequest(HttpServletRequest arg0) {
+	public void setServletRequest(HttpServletRequest request) {
 		
 		this.request=request;
 		

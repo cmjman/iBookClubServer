@@ -14,6 +14,8 @@ public class FinalConstants {
 	
 	public static final String DB_URL_R="jdbc:mysql://localhost:3306/app_ibookclubserver";
 	
+	public static final String SERVER_URL ="http://192.168.126.50:8004/iBookClubServer/";
+	
 //	public static final String DB_USERNAME=SaeUserInfo.getAccessKey();
 	
 //	public static final String DB_PASSWORD=SaeUserInfo.getSecretKey();
@@ -21,6 +23,10 @@ public class FinalConstants {
 //	public static final String DB_URL_W="jdbc:mysql://w.rdc.sae.sina.com.cn:3307/app_ibookclubserver";
 	
 //	public static final String DB_URL_R="jdbc:mysql://r.rdc.sae.sina.com.cn:3307/app_ibookclubserver";
+	
+//	    public static final String SERVER_URL ="http://1.ibookclubserver.sinaapp.com/"; 
+	   
+	  
 	
 	public static final String DB_DRIVER="com.mysql.jdbc.Driver";
 	

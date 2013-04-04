@@ -16,6 +16,7 @@ import java.util.Hashtable;
 
 import com.shining.ibookclubserver.FinalConstants;
 import com.shining.ibookclubserver.bean.BookBean;
+import com.shining.ibookclubserver.bean.TimelineBean;
 import com.shining.ibookclubserver.bean.UserBean;
 import com.sina.sae.util.SaeUserInfo;
 
@@ -255,6 +256,7 @@ public class BookDao {
 	   			bean.setPrice(rs.getString("price"));
 	   			bean.setBookname(rs.getString("name"));
 	   			bean.setSummary(rs.getString("summary"));
+	   			bean.setTimeStamp(rs.getString("postTime"));
 	   			bookList.add(bean);
 	   		 }
 	   	 }catch(Exception e){
@@ -434,6 +436,70 @@ public class BookDao {
     	 this.userBean=userBean;
      }
 	 
+	 public ArrayList<TimelineBean> getTimeline(String email){
+		 
+		 ArrayList<TimelineBean> timeline=new ArrayList<TimelineBean>();
+		
+		 String sql="select * from("+
+				 "timeline inner join userinfo on timeline.id = userinfo.id)" +
+				 "order by timestamp desc;";
+		
+		
+
+	   	 try{
+	   		 con=getConnection(true);
+	   		 Statement stmt=con.createStatement();
+	   		 ResultSet rs=stmt.executeQuery(sql);
+	   		 for(int i=0;rs.next();i++){
+	   			 
+	   			TimelineBean bean=new TimelineBean();
+	   			
+	   			String avatar=rs.getString("picture");
+	   			if(avatar==null){
+	   				avatar=FinalConstants.SERVER_URL+"Image/stub.png";
+	   			}
+	  
+	   			bean.setAvatar(avatar);
+	   			bean.setMessage(rs.getString("message"));
+	   			bean.setNickname(rs.getString("nickname"));
+	   			
+	   	
+	   			bean.setTimeStamp(rs.getString("timestamp"));
+	   			
+	   			timeline.add(bean);
+	   		 }
+	   	 }catch(Exception e){
+	   		e.printStackTrace();
+	   	 }
+		 
+		 return timeline; 
+	 }
+	 
+	 public Boolean postTweet(String email,String message){
+		 
+	
+		 String sql="insert into timeline(id,message,timestamp)  values(?,?,?)";
+		 Date date = new Date();
+		 Timestamp timeStamp = new Timestamp(date.getTime());
+		 
+		 try{
+        	 con=getConnection(false);
+        	 PreparedStatement pstmt=con.prepareStatement(sql);
+             pstmt.setInt(1,findID(email));
+             pstmt.setString(2,message);
+             pstmt.setTimestamp(3, timeStamp);
+             pstmt.executeUpdate();
+             return true;
+         }
+         catch(Exception e){
+              
+        	 e.printStackTrace();
+        	 
+        	 return false;
+         }      
+		 
+	 }
+	 
 	 
 	 
  
@@ -459,6 +525,7 @@ public class BookDao {
          }      
 
      }
+     
      
      public String checkPassword(String email,String pw_check) throws SQLException {
     	 

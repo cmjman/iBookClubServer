@@ -46,8 +46,17 @@
               <result type="json"></result>        
         </action> 
         
-         <action name="getRecommend" class="com.shining.ibookclubserver.action.GerRecommendAction" method="getRecommend">
+         <action name="getRecommend" class="com.shining.ibookclubserver.action.GetRecommendAction" method="getRecommend">
               <result type="json"></result>        
         </action> 
+        
+         <action name="getTimeline" class="com.shining.ibookclubserver.action.GetTimelineAction" method="getTimeline">
+              <result type="json"></result>        
+        </action> 
+        
+         <action name="postTweet" class="com.shining.ibookclubserver.action.PostTweetAction" method="postTweet">
+              <result type="json"></result>        
+        </action> 
+         
      </package> 
  </struts>
