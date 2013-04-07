@@ -10,9 +10,9 @@ public class FinalConstants {
 	
 	public static final String DB_PASSWORD="123456";
 	
-	public static final String DB_URL_W="jdbc:mysql://localhost:3306/app_ibookclubserver";
+	public static final String DB_URL_W="jdbc:mysql://localhost:3306/app_ibookclubserver?useUnicode=true&characterEncoding=utf8";
 	
-	public static final String DB_URL_R="jdbc:mysql://localhost:3306/app_ibookclubserver";
+	public static final String DB_URL_R="jdbc:mysql://localhost:3306/app_ibookclubserver?useUnicode=true&characterEncoding=utf8";
 	
 	public static final String SERVER_URL ="http://192.168.126.50:8004/iBookClubServer/";
 	

@@ -234,6 +234,39 @@ public class BookDao {
 		 }
 	 }
 	
+	public ArrayList<BookBean> getRecommendBook(String email){
+		
+		//TODO 具体SQL待修改,现为获取最近书籍数据，仅测试用
+		String  sql="select * from (" +
+	   	 		"(bookinfo inner join bookowner on bookinfo.isbn = bookowner.isbn)" +
+	   	 		"inner join userinfo on bookowner.id = userinfo.id" +
+	   	 		")order by postTime desc;"
+	   	 	;
+		
+		 ArrayList<BookBean> bookList=new ArrayList<BookBean>();
+	   	 try{
+	   		 con=getConnection(true);
+	   		 Statement stmt=con.createStatement();
+	   		 ResultSet rs=stmt.executeQuery(sql);
+	   		 while(rs.next()){
+	   			BookBean bean=new BookBean();
+	   			bean.setIsbn(rs.getString("isbn"));
+	   			System.out.println("BookDao getRecommendBook isbn:"+rs.getString("isbn"));
+	   			bean.setAuthor(rs.getString("author"));
+	   			bean.setBookcover_url(rs.getString("bookcover"));
+	   			bean.setPublisher(rs.getString("publisher"));
+	   			bean.setPrice(rs.getString("price"));
+	   			bean.setBookname(rs.getString("name"));
+	   			bean.setSummary(rs.getString("summary"));
+	   			bean.setTimeStamp(rs.getString("postTime"));
+	   			bookList.add(bean);
+	   		 }
+	   	 }catch(Exception e){
+	   		e.printStackTrace();
+	   	 }
+	   	 return bookList;
+	}
+	
 	public ArrayList<BookBean> getRecentBook(String email){
 	   	 
 	   	 String sql="select * from (" +
