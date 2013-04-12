@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.bean.BookBean;
 import com.shining.ibookclubserver.dao.BookDao;
+import com.shining.ibookclubserver.dao.Dao;
 
 public class SearchBookAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -56,12 +57,13 @@ public class SearchBookAction  extends ActionSupport implements ServletRequestAw
 
 	public void searchBook(){
 		
-		BookDao dao=BookDao.getInstance();
+	//	BookDao dao=BookDao.getInstance();
+		Dao dao=Dao.getInstance();
 		ArrayList<BookBean> list;
 		Gson gson_response=new Gson();
 		
 		list=dao.searchPublicBook(keyword);
-	
+		
 		PrintWriter out;
 		try {
 			out = response.getWriter();

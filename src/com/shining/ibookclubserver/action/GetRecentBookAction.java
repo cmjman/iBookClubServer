@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.bean.BookBean;
 import com.shining.ibookclubserver.dao.BookDao;
+import com.shining.ibookclubserver.dao.Dao;
 
 public class GetRecentBookAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -51,7 +52,8 @@ public class GetRecentBookAction  extends ActionSupport implements ServletReques
 	public void getRecentBook(){
 		
 		
-		BookDao dao=BookDao.getInstance();
+	//	BookDao dao=BookDao.getInstance();
+		Dao dao=Dao.getInstance();
 		ArrayList<BookBean> list;
 		Gson gson_response=new Gson();
 		

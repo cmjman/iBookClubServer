@@ -10,7 +10,7 @@
 
      <package name="ibookclubserver" namespace="" extends="json-default">
       	<action name="" class="">
-    		<result>/login.jsp</result>
+    		<result>/index.html</result>
    	 	</action>
          <action name="login" class="com.shining.ibookclubserver.action.LoginAction" method="login">
               <result type="json"></result>        

@@ -14,6 +14,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.dao.BookDao;
+import com.shining.ibookclubserver.dao.Dao;
 
 public class DeleteBookAction extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -56,7 +57,8 @@ public class DeleteBookAction extends ActionSupport implements ServletRequestAwa
 	public void deleteBook() throws IOException{
 		
 		
-		BookDao dao=BookDao.getInstance();
+	//	BookDao dao=BookDao.getInstance();
+		Dao dao=Dao.getInstance();
 		dao.deleteBook(email, isbn);
 		
 		JSONObject jsonObject=new JSONObject();

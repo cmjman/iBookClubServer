@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.bean.BookBean;
 import com.shining.ibookclubserver.dao.BookDao;
+import com.shining.ibookclubserver.dao.Dao;
 
 public class AddBookAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 	
@@ -87,7 +88,8 @@ public class AddBookAction  extends ActionSupport implements ServletRequestAware
 		
 		System.out.println(bookbean.getIsbn());
 		
-		BookDao dao=BookDao.getInstance();
+	//	BookDao dao=BookDao.getInstance();
+		Dao dao=Dao.getInstance();
 	
 		dao.setBookBean(bookbean);
 		

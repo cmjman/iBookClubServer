@@ -17,6 +17,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.bean.BookBean;
 import com.shining.ibookclubserver.bean.TimelineBean;
 import com.shining.ibookclubserver.dao.BookDao;
+import com.shining.ibookclubserver.dao.Dao;
 
 public class GetTimelineAction extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 	
@@ -51,7 +52,8 @@ public class GetTimelineAction extends ActionSupport implements ServletRequestAw
 		
 
 		
-		BookDao dao=BookDao.getInstance();
+	//	BookDao dao=BookDao.getInstance();
+		Dao dao=Dao.getInstance();
 		ArrayList<TimelineBean> list;
 		Gson gson_response=new Gson();
 		

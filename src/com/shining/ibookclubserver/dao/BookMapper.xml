@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shining.ibookclubserver.dao.BookMapper">
+  
+    <select id="getBookByISBN" parameterType="String" resultMap="bookResultMap">
+        select * from bookinfo where isbn=#{isbn}
+    </select>
+  	
+    <select id="getBookOwnerInfo" parameterType="int" resultType="com.shining.ibookclubserver.dao.BookOwnerMapper">
+        select * from bookinfo where id = #{id}
+    </select>
+    
+    <resultMap type="com.shining.ibookclubserver.bean.BookBean" id="bookResultMap">
+        <result property="isbn" column="isbn"/>
+        <result property="name" column="name"/>
+        <result property="author" column="author"/>
+        <result property="publisher" column="publisher"/>
+        <result property="bookcover" column="bookcover"/>
+        <result property="summary" column="summary"/>
+        <result property="price" column="price"/>
+        <result property="timestamp" column="postTime"/>
+    </resultMap>
+    
+    <select id="getRecentBook" resultMap="bookResultMap">
+        select * from 
+        (
+	   	 	(bookinfo inner join bookowner on bookinfo.isbn = bookowner.isbn)
+	   	 	inner join userinfo on bookowner.id = userinfo.id
+	   	)
+	   	order by postTime desc
+    </select>
+    
+    <select id="getMyBook" parameterType="int" resultMap="bookResultMap">
+        select * from 
+        bookinfo where isbn in
+        (
+        	select isbn from bookowner 
+        	where id =#{id}
+        )
+    </select>
+    
+    <select id="getBookInfo" resultMap="bookResultMap">
+        select * from bookinfo
+    </select>
+        
+    <select id="searchPublicBook" parameterType="String" resultMap="bookResultMap">
+         select * from 
+         bookinfo where name like #{name} 
+    </select>
+    
+    <select id="getTimeline" resultMap="timelineResultMap">
+        select * from
+        (
+			timeline inner join userinfo on timeline.id = userinfo.id
+		) 
+		order by timestamp desc
+    </select>
+    
+    <resultMap type="com.shining.ibookclubserver.bean.TimelineBean" id="timelineResultMap">
+        <result property="avatar" column="picture"/>
+        <result property="message" column="message"/>
+        <result property="nickname" column="nickname"/>  
+        <result property="timestamp" column="postTime"/>
+    </resultMap>
+    
+    <parameterMap type="com.shining.ibookclubserver.bean.BookBean" id="bookParameterMap">
+        <parameter property="isbn" jdbcType="CHAR"/>
+        <parameter property="name" jdbcType="VARCHAR"/>
+        <parameter property="author" jdbcType="VARCHAR"/>
+        <parameter property="publisher" jdbcType="VARCHAR"/>
+        <parameter property="bookcover" jdbcType="VARCHAR"/>
+        <parameter property="summary" jdbcType="LONGVARCHAR"/>
+        <parameter property="price" jdbcType="VARCHAR"/>
+    </parameterMap>
+    
+    <insert id="addBook" parameterMap="bookParameterMap">
+        insert into bookinfo(
+        	isbn,
+        	name,
+        	author,
+        	publisher,
+        	bookcover,
+        	summary,
+        	price
+        )values(?,?,?,?,?,?,?)
+    </insert>
+    
+     <parameterMap type="com.shining.ibookclubserver.dao.BookOwnerMapper" id="bookOwnerParameterMap">
+        <parameter property="isbn" jdbcType="CHAR"/>
+        <parameter property="id" jdbcType="INTEGER"/>
+        <parameter property="latitude" jdbcType="VARCHAR"/>
+        <parameter property="longitude" jdbcType="VARCHAR"/>
+        <parameter property="postTime" jdbcType="TIMESTAMP"/>
+        <parameter property="rating" jdbcType="FLOAT"/>
+    </parameterMap>
+    
+    <insert id="setOwnerInfo" parameterMap="bookOwnerParameterMap">
+        insert into bookowner(
+        	isbn,
+        	id,
+        	latitude,
+        	longitude,
+        	postTime,
+        	rating
+        	)values(?,?,?,?,?,?)
+    </insert>
+    
+    <delete id="deleteBook" parameterType="map">
+        delete from bookowner
+        where isbn = #{isbn}
+        and id = #{id}
+    </delete>
+</mapper>

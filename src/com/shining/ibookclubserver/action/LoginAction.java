@@ -15,6 +15,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.dao.BookDao;
+import com.shining.ibookclubserver.dao.Dao;
 
 public class LoginAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -64,7 +65,8 @@ public class LoginAction  extends ActionSupport implements ServletRequestAware,S
 		
 		try {
 			
-			BookDao dao=BookDao.getInstance();	
+			//BookDao dao=BookDao.getInstance();	
+			Dao dao=Dao.getInstance();
 			String nickname=dao.checkPassword(email,password);
 			Map<String,String> json=new HashMap<String,String>();  
 			if(nickname!="-1"){

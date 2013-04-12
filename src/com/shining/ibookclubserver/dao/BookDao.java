@@ -106,10 +106,10 @@ public class BookDao {
         	 con=getConnection(false);
         	 PreparedStatement pstmt=con.prepareStatement(FinalConstants.SQL_INSERT_BOOKINFO);
              pstmt.setString(1,bookBean.getIsbn());
-             pstmt.setString(2,bookBean.getBookname());
+             pstmt.setString(2,bookBean.getName());
              pstmt.setString(3, bookBean.getPublisher());
              pstmt.setString(4, bookBean.getAuthor());
-             pstmt.setString(5, bookBean.getBookcover_url());
+             pstmt.setString(5, bookBean.getBookcover());
              pstmt.setString(6, bookBean.getSummary());
              pstmt.setString(7, bookBean.getPrice());
              pstmt.executeUpdate();
@@ -253,10 +253,10 @@ public class BookDao {
 	   			bean.setIsbn(rs.getString("isbn"));
 	   			System.out.println("BookDao getRecommendBook isbn:"+rs.getString("isbn"));
 	   			bean.setAuthor(rs.getString("author"));
-	   			bean.setBookcover_url(rs.getString("bookcover"));
+	   			bean.setBookcover(rs.getString("bookcover"));
 	   			bean.setPublisher(rs.getString("publisher"));
 	   			bean.setPrice(rs.getString("price"));
-	   			bean.setBookname(rs.getString("name"));
+	   			bean.setName(rs.getString("name"));
 	   			bean.setSummary(rs.getString("summary"));
 	   			bean.setTimeStamp(rs.getString("postTime"));
 	   			bookList.add(bean);
@@ -284,10 +284,10 @@ public class BookDao {
 	   			bean.setIsbn(rs.getString("isbn"));
 	   			System.out.println("BookDao getRecentBook isbn:"+rs.getString("isbn"));
 	   			bean.setAuthor(rs.getString("author"));
-	   			bean.setBookcover_url(rs.getString("bookcover"));
+	   			bean.setBookcover(rs.getString("bookcover"));
 	   			bean.setPublisher(rs.getString("publisher"));
 	   			bean.setPrice(rs.getString("price"));
-	   			bean.setBookname(rs.getString("name"));
+	   			bean.setName(rs.getString("name"));
 	   			bean.setSummary(rs.getString("summary"));
 	   			bean.setTimeStamp(rs.getString("postTime"));
 	   			bookList.add(bean);
@@ -311,10 +311,10 @@ public class BookDao {
 	   			BookBean bean=new BookBean();
 	   			bean.setIsbn(rs.getString("isbn"));
 	   			bean.setAuthor(rs.getString("author"));
-	   			bean.setBookcover_url(rs.getString("bookcover"));
+	   			bean.setBookcover(rs.getString("bookcover"));
 	   			bean.setPublisher(rs.getString("publisher"));
 	   			bean.setPrice(rs.getString("price"));
-	   			bean.setBookname(rs.getString("name"));
+	   			bean.setName(rs.getString("name"));
 	   			bean.setSummary(rs.getString("summary"));
 	   			bookList.add(bean);
 	   		 }
@@ -338,10 +338,10 @@ public class BookDao {
 	   			BookBean bean=new BookBean();
 	   			bean.setIsbn(rs.getString("isbn"));
 	   			bean.setAuthor(rs.getString("author"));
-	   			bean.setBookcover_url(rs.getString("bookcover"));
+	   			bean.setBookcover(rs.getString("bookcover"));
 	   			bean.setPublisher(rs.getString("publisher"));
 	   			bean.setPrice(rs.getString("price"));
-	   			bean.setBookname(rs.getString("name"));
+	   			bean.setName(rs.getString("name"));
 	   			bean.setSummary(rs.getString("summary"));
 	   			bookList.add(bean);
 	   		 }
@@ -366,10 +366,10 @@ public class BookDao {
 	   			BookBean bean=new BookBean();
 	   			bean.setIsbn(rs.getString("isbn"));
 	   			bean.setAuthor(rs.getString("author"));
-	   			bean.setBookcover_url(rs.getString("bookcover"));
+	   			bean.setBookcover(rs.getString("bookcover"));
 	   			bean.setPublisher(rs.getString("publisher"));
 	   			bean.setPrice(rs.getString("price"));
-	   			bean.setBookname(rs.getString("name"));
+	   			bean.setName(rs.getString("name"));
 	   			bean.setSummary(rs.getString("summary"));
 	   			bookList.add(bean);
 	   		 }
@@ -448,10 +448,10 @@ public class BookDao {
 	   			BookBean bean=new BookBean();
 	   			bean.setIsbn(rs.getString("isbn"));
 	   			bean.setAuthor(rs.getString("author"));
-	   			bean.setBookcover_url(rs.getString("bookcover"));
+	   			bean.setBookcover(rs.getString("bookcover"));
 	   			bean.setPublisher(rs.getString("publisher"));
 	   			bean.setPrice(rs.getString("price"));
-	   			bean.setBookname(rs.getString("name"));
+	   			bean.setName(rs.getString("name"));
 	   			bean.setSummary(rs.getString("summary"));
 	   			bookList.add(bean);
 	   		 }
@@ -580,7 +580,6 @@ public class BookDao {
 			 
 				  nickname=new String(rs.getString("nickname"));
 				  
-			
 			  }else{
 				  nickname="-1";
 			  }
