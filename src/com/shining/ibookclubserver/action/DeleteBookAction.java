@@ -58,7 +58,8 @@ public class DeleteBookAction extends ActionSupport implements ServletRequestAwa
 		
 		
 	//	BookDao dao=BookDao.getInstance();
-		Dao dao=Dao.getInstance();
+
+		BookDao dao=(BookDao) BookDao.getInstance();
 		dao.deleteBook(email, isbn);
 		
 		JSONObject jsonObject=new JSONObject();

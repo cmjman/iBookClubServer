@@ -50,7 +50,8 @@ public class GetBookAction extends ActionSupport implements ServletRequestAware,
 	//	String email=request.getParameter("email");
 		
 	//	BookDao dao=BookDao.getInstance();
-		Dao dao=Dao.getInstance();
+
+		BookDao dao=(BookDao) BookDao.getInstance();
 		ArrayList<BookBean> list;
 		Gson gson_response=new Gson();
 		if(email==null){

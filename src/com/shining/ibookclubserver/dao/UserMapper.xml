@@ -6,4 +6,19 @@
   	<select id="getUserinfo" parameterType="String" resultType="com.shining.ibookclubserver.dao.UserMapper">
     	select * from  userinfo where email = #{email}
   	</select>
+  	
+  	<parameterMap type="com.shining.ibookclubserver.bean.UserBean" id="userParameterMap">
+        <parameter property="email" jdbcType="VARCHAR"/>
+        <parameter property="password" jdbcType="VARCHAR"/>
+        <parameter property="nickname" jdbcType="VARCHAR"/>
+        <parameter property="age" jdbcType="INTEGER"/>
+        <parameter property="sex" jdbcType="VARCHAR"/>
+        <parameter property="interest" jdbcType="VARCHAR"/>
+    </parameterMap>
+  	
+  	<insert id="regist" parameterMap="userParameterMap">
+  	    insert into userinfo
+  	    (email,password,nickname,age,sex,interest)  
+  	    values(?,?,?,?,?,?)
+  	</insert>
 </mapper>

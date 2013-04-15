@@ -89,7 +89,7 @@ public class AddBookAction  extends ActionSupport implements ServletRequestAware
 		System.out.println(bookbean.getIsbn());
 		
 	//	BookDao dao=BookDao.getInstance();
-		Dao dao=Dao.getInstance();
+		BookDao dao=(BookDao) BookDao.getInstance();
 	
 		dao.setBookBean(bookbean);
 		

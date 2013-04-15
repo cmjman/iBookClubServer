@@ -14,6 +14,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.dao.BookDao;
+import com.shining.ibookclubserver.dao.Dao;
 
 public class CheckBookAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -55,7 +56,9 @@ public class CheckBookAction  extends ActionSupport implements ServletRequestAwa
 
 	public void checkBook(){
 			
-			BookDao dao=BookDao.getInstance();
+		//	BookDao dao=BookDao.getInstance();
+
+		BookDao dao=(BookDao) BookDao.getInstance();
 			Boolean result=dao.checkBook(email, isbn);
 			
 			JSONObject jsonObj=new JSONObject();

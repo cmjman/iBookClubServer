@@ -14,6 +14,8 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.bean.UserBean;
 import com.shining.ibookclubserver.dao.BookDao;
+import com.shining.ibookclubserver.dao.Dao;
+import com.shining.ibookclubserver.dao.UserDao;
 
 public class RegisterAction extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -92,7 +94,8 @@ public class RegisterAction extends ActionSupport implements ServletRequestAware
 		userBean.setInterest(interest);
 		userBean.setGender(gender);
 		userBean.setAge(age);
-		BookDao dao=BookDao.getInstance();
+	//	BookDao dao=BookDao.getInstance();
+		UserDao dao=(UserDao)UserDao.getInstance();
 		
 		JSONObject jsonObj= new JSONObject();
 		try{

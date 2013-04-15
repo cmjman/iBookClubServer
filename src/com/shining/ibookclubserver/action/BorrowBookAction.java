@@ -13,6 +13,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.dao.BookDao;
+import com.shining.ibookclubserver.dao.Dao;
 
 public class BorrowBookAction extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -54,7 +55,9 @@ public class BorrowBookAction extends ActionSupport implements ServletRequestAwa
 	
 	public void borrowBook(){
 		
-		BookDao dao=BookDao.getInstance();
+	//	BookDao dao=BookDao.getInstance();
+
+		BookDao dao=(BookDao) BookDao.getInstance();
 		Hashtable<Integer,String> ownerList=dao.borrowBook(email, isbn);
 		
 		Gson gson_response=new Gson();

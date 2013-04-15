@@ -15,6 +15,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.bean.BookBean;
 import com.shining.ibookclubserver.bean.TimelineBean;
 import com.shining.ibookclubserver.dao.BookDao;
+import com.shining.ibookclubserver.dao.Dao;
 
 public class PostTweetAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 	
@@ -63,7 +64,9 @@ public class PostTweetAction  extends ActionSupport implements ServletRequestAwa
 
 		
 	
-		BookDao dao=BookDao.getInstance();
+		//BookDao dao=BookDao.getInstance();
+
+		BookDao dao=(BookDao) BookDao.getInstance();
 	
 	
 		

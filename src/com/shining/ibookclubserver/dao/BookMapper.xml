@@ -23,6 +23,15 @@
         <result property="timestamp" column="postTime"/>
     </resultMap>
     
+     <resultMap type="com.shining.ibookclubserver.dao.BookOwnerMapper" id="bookOwnerResultMap">
+        <result property="isbn" column="isbn"/>
+        <result property="id" column="id"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="postTime" column="postTime"/>
+        <result property="rating" column="rating"/>
+    </resultMap>
+    
     <select id="getRecentBook" resultMap="bookResultMap">
         select * from 
         (
@@ -39,6 +48,11 @@
         	select isbn from bookowner 
         	where id =#{id}
         )
+    </select>
+    
+    <select id="getOwnerInfoById" parameterType="int" resultMap="bookOwnerResultMap">
+        select * from 
+        bookowner where id  <![CDATA[<>]]> #{id}
     </select>
     
     <select id="getBookInfo" resultMap="bookResultMap">
@@ -96,6 +110,8 @@
         <parameter property="rating" jdbcType="FLOAT"/>
     </parameterMap>
     
+   
+    
     <insert id="setOwnerInfo" parameterMap="bookOwnerParameterMap">
         insert into bookowner(
         	isbn,
@@ -105,6 +121,12 @@
         	postTime,
         	rating
         	)values(?,?,?,?,?,?)
+    </insert>
+    
+    <insert id="postTweet" parameterType="map">
+        insert into timeline
+        (#{id},#{message},#{timestamp})  
+        values(?,?,?)
     </insert>
     
     <delete id="deleteBook" parameterType="map">

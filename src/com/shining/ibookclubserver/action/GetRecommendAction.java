@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.bean.BookBean;
 import com.shining.ibookclubserver.dao.BookDao;
+import com.shining.ibookclubserver.dao.Dao;
 
 public class GetRecommendAction extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -51,7 +52,9 @@ public class GetRecommendAction extends ActionSupport implements ServletRequestA
 		
 		
 		
-		BookDao dao=BookDao.getInstance();
+		//BookDao dao=BookDao.getInstance();
+
+		BookDao dao=(BookDao) BookDao.getInstance();
 		ArrayList<BookBean> list;
 		Gson gson_response=new Gson();
 		

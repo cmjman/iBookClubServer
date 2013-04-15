@@ -70,15 +70,16 @@ public class GetNearbyAction  extends ActionSupport implements ServletRequestAwa
 		System.out.println("getNearby Location:"+latitude+longitude);
 		
 	//	BookDao dao=BookDao.getInstance();
-		Dao dao=Dao.getInstance();
+
+		BookDao dao=(BookDao) BookDao.getInstance();
 		ArrayList<BookBean> list;
 		Gson gson_response=new Gson();
 		
-		ArrayList<String> isbn=new ArrayList<String>();
+	//	ArrayList<String> isbn=new ArrayList<String>();
 		
-		isbn=dao.getNearbyBook(email, latitude, longitude);
+		list=dao.getNearbyBook(email, latitude, longitude);
 		
-		list=dao.getBookByIsbn(isbn);
+//		list=dao.getBookByIsbn(isbn);
 		
 		try {
 			

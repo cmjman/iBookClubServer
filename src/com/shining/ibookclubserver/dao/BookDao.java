@@ -1,385 +1,267 @@
 package com.shining.ibookclubserver.dao;
 
-import java.sql.Connection;
-
-
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
-import com.shining.ibookclubserver.FinalConstants;
+import org.apache.ibatis.session.SqlSession;
+
 import com.shining.ibookclubserver.bean.BookBean;
 import com.shining.ibookclubserver.bean.TimelineBean;
-import com.shining.ibookclubserver.bean.UserBean;
-import com.sina.sae.util.SaeUserInfo;
 
-public class BookDao {
-
-	private static BookDao dao=new BookDao();
-	
-	private Connection con;
+public class BookDao extends Dao{
 	
 	private BookBean bookBean;
 	
-	private UserBean userBean;
-	
+	private static BookDao bookDao=new BookDao();
 
-	public BookDao() {
-		
-		//TODO 此处SQL在navicat中运行正常，直接用JDBC注入则会出错，待修正 
-		//com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; 
-		//check the manual that corresponds to your MySQL server version for the right syntax to use 
-		//near 'create table if not exists bookinfo(isbn char(13),primary key(isbn),name varchar' at line 1
-		
-		
-    	 try{
-    		 con=getConnection(false);
-    	
-    		 PreparedStatement pstmt=con.prepareStatement(FinalConstants.SQL_CREATE);
-  
-             pstmt.executeUpdate();
-    	 }catch(Exception e){
-    		 e.printStackTrace();
-    	 }
-	}
-	
-	public Connection getConnection(Boolean read){
-		
-		Connection conn=null;
-		
-		try{
-			
-			Class.forName(FinalConstants.DB_DRIVER).newInstance();
-			if(read)
-				conn = DriverManager.getConnection(FinalConstants.DB_URL_R,FinalConstants.DB_USERNAME,FinalConstants.DB_PASSWORD);
-			else
-				conn = DriverManager.getConnection(FinalConstants.DB_URL_W,FinalConstants.DB_USERNAME,FinalConstants.DB_PASSWORD);
-            
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        
-        if(conn==null){
-        	System.out.println("获取数据库连接失败！");
-        }
-        
-        return conn;
-	}
-
-	public static BookDao getInstance() {
-		
-		return dao;
-	}
-	
 	public void setBookBean(BookBean bookBean){
         
 		this.bookBean=bookBean;
     }
 	
+	public static BookDao getInstance() {
+		
+		return bookDao;
+	}
+	
 	public boolean isBookExist(){
-    	 
-    	 String sql="select isbn from bookinfo where isbn='"+bookBean.getIsbn()+"';";
-    	 
-    	 try{
-    		 con=getConnection(true);
-    		 Statement stmt=con.createStatement();
-    		 ResultSet rs=stmt.executeQuery(sql);
-    		 if(rs.next())
-    			 return true;
-    	 }catch(Exception e){
-    		 e.printStackTrace();
-    	 }
-    	 return false;
-    }
+		
+		SqlSession session=  factory.openSession();
+		Boolean result=false;
+	  	
+	  	try{
+		  	
+	  		BookBean bean=session.selectOne("com.shining.ibookclubserver.dao.BookMapper.getBookByISBN", bookBean.getIsbn());
+		  	
+	  		if(bean!=null)
+	  			result=true;
 	
-	public void addBook() throws Exception{
-         
-    	
-         try{
-        	 con=getConnection(false);
-        	 PreparedStatement pstmt=con.prepareStatement(FinalConstants.SQL_INSERT_BOOKINFO);
-             pstmt.setString(1,bookBean.getIsbn());
-             pstmt.setString(2,bookBean.getName());
-             pstmt.setString(3, bookBean.getPublisher());
-             pstmt.setString(4, bookBean.getAuthor());
-             pstmt.setString(5, bookBean.getBookcover());
-             pstmt.setString(6, bookBean.getSummary());
-             pstmt.setString(7, bookBean.getPrice());
-             pstmt.executeUpdate();
-         }
-         catch(Exception e){
-              
-        	 e.printStackTrace();
-         }      
+	  	}catch(Exception e){
+	  		
+	  		e.printStackTrace();
+	  	}finally {
+	  		
+	  		session.close();
+	  	}
+	  	
+	  	return result;
+   }
+	
+	public Boolean addBook(){
+		
+		SqlSession session=  factory.openSession();
+		Boolean result=false;
 
-     }
+		try{
+			session.insert("com.shining.ibookclubserver.dao.BookMapper.addBook",bookBean);
+			session.commit();
+			
+			result=true;
+		}catch(Exception e){
+	  		
+	  		e.printStackTrace();
+	  	}finally {
+	  		
+	  		session.close();
+	  	}
+		return result;
+	}
 	
-	public int findID(String email){
-    	 
-    	 String sql="select id from userinfo where email='"+email+"';";
-    	 try{
-    		 con=getConnection(true);
-    		 Statement stmt=con.createStatement();
-    		 ResultSet rs=stmt.executeQuery(sql);
-    		 if(rs.next())
-    			 return rs.getInt("id");
-    	 }catch(Exception e){
-    		 e.printStackTrace();
-    	 }
-    	 return -1;
-     }
-	
-	public void setOwnerInfo(String email,String latitude,String longitude,String rating){
-   	 
+	public Boolean setOwnerInfo(String email,String latitude,String longitude,String rating){
+		
+		SqlSession session=  factory.openSession();
+		Boolean result=false;
 		Date date = new Date();
 		Timestamp timeStamp = new Timestamp(date.getTime());
-   	 	int id=findID(email);
-   	 	try{
-   	 		con=getConnection(false);
-   	 		PreparedStatement pstmt=con.prepareStatement(FinalConstants.SQL_INSERT_BOOKOWNER);
-   	 		pstmt.setString(1, bookBean.getIsbn());
-   	 		pstmt.setInt(2, id);
-   	 		pstmt.setString(3, latitude);
-   	 		pstmt.setString(4, longitude);
-   	 		pstmt.setTimestamp(5, timeStamp);
-   	 		pstmt.setFloat(6, Float.parseFloat(rating));
-   	 		pstmt.executeUpdate();
-   	 	}catch(Exception e){
-   	 		e.printStackTrace();
-   	 	}
-    }
-	
-
+		
+		try{
+			UserMapper userMapper=session.selectOne("com.shining.ibookclubserver.dao.UserMapper.getUserinfo", email);
+			BookOwnerMapper bookOwnerMapper=new BookOwnerMapper();
+			bookOwnerMapper.setIsbn(bookBean.getIsbn());
+			bookOwnerMapper.setId(userMapper.getId());
+			bookOwnerMapper.setLatitude(latitude);
+			bookOwnerMapper.setLongitude(longitude);
+			bookOwnerMapper.setPostTime(timeStamp);
+			bookOwnerMapper.setRating(Float.parseFloat(rating));
+			session.insert("com.shining.ibookclubserver.dao.BookMapper.setOwnerInfo",bookOwnerMapper);
+			session.commit();
+			result=true;
+		}catch(Exception e){
+	  		
+	  		e.printStackTrace();
+	  	}finally {
+	  		
+	  		session.close();
+	  	}
+		
+		return result;
+	}
 	
 	public Boolean checkBook(String email,String isbn){
 		
-		 String sql="select * from bookowner where isbn ='"+isbn+"' and id in (select id from userinfo where email ='"+email+"');" ;
-		 
-		 try{
-			 con=getConnection(true);
-			 Statement stmt=con.createStatement();
-			 ResultSet rs=stmt.executeQuery(sql);
-			 if(rs.next())
-				 return true;
-	
-		 }catch(Exception e){
-			 e.printStackTrace();
-		 }
-		 return false;
+		SqlSession session=  factory.openSession();
+		Boolean result=false;
 		
+		UserMapper userMapper=new UserMapper();
+		BookOwnerMapper bookOwnerMapper=new BookOwnerMapper();
+		
+		try{
+			
+			userMapper=session.selectOne("com.shining.ibookclubserver.dao.UserMapper.getUserinfo", email);
+			bookOwnerMapper=session.selectOne("com.shining.ibookclubserver.dao.BookMapper.getBookOwnerInfo", userMapper.getId());
+			if(bookOwnerMapper!=null)
+				result=true;
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return result;
 	}
 	
 	public Boolean recordBook(String email,String isbn,String nickname){
 		
-		String sql="";
-		try{
-			 con=getConnection(true);
-			 Statement stmt=con.createStatement();
-			 ResultSet rs=stmt.executeQuery(sql);
-			 
-			 while(rs.next()){
-				 
-				//TODO 借书记录，具体sql待写入
-				
-				
-			 }
-			}catch(Exception e){
-			 e.printStackTrace();
-			}
+		Boolean result=false;
 		
-		return true;
+		//TODO 借书记录写入待补充
+		
+		return result;
+	
 	}
 	
 	public Hashtable<Integer,String> borrowBook(String email,String isbn){
 		
-		String sql="select id,nickname from userinfo where id in (" +
-					"select id from bookowner where isbn ='"+isbn+"') and id <> (" +
-					"select id from userinfo where email ='"+email+"');" ;
 		Hashtable<Integer,String> ownerTable=new Hashtable<Integer,String>();
-		 try{
-			 con=getConnection(true);
-			 Statement stmt=con.createStatement();
-			 ResultSet rs=stmt.executeQuery(sql);
-			 
-			 while(rs.next()){
-				 
-				
-				 ownerTable.put(rs.getInt("id"), rs.getString("nickname"));
-				
-			 }
-		 }catch(Exception e){
-			 e.printStackTrace();
-		 }
-		 return ownerTable;
 		
+		//TODO
+		
+		
+		return ownerTable;
 	}
 	
-	public void deleteBook(String email,String isbn){
-		 
-		 String sql="delete from bookowner where isbn ='"+isbn+"' and id in (select id from userinfo where email ='"+email+"');" ;
-		 
-		 try{
-			 con=getConnection(false);
-			 Statement stmt=con.createStatement();
-			 stmt.execute(sql);
-		 }catch(Exception e){
-			 e.printStackTrace();
-		 }
-	 }
+	public Boolean deleteBook(String email,String isbn){
+		
+		Boolean result=false;
+		SqlSession session=  factory.openSession();
+		
+		UserMapper userMapper=new UserMapper();
+		BookOwnerMapper bookOwnerMapper=new BookOwnerMapper();
+		
+		try{
+			
+			userMapper=session.selectOne("com.shining.ibookclubserver.dao.UserMapper.getUserinfo", email);
+			Map<String, Object> param=new HashMap<String, Object>();  
+			param.put("isbn", isbn);
+			param.put("id", userMapper.getId());
+			session.delete("com.shining.ibookclubserver.dao.BookMapper.deleteBook",param);
+			session.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		
+		return result;
+	}
 	
 	public ArrayList<BookBean> getRecommendBook(String email){
 		
-		//TODO 具体SQL待修改,现为获取最近书籍数据，仅测试用
-		String  sql="select * from (" +
-	   	 		"(bookinfo inner join bookowner on bookinfo.isbn = bookowner.isbn)" +
-	   	 		"inner join userinfo on bookowner.id = userinfo.id" +
-	   	 		")order by postTime desc;"
-	   	 	;
-		
 		 ArrayList<BookBean> bookList=new ArrayList<BookBean>();
-	   	 try{
-	   		 con=getConnection(true);
-	   		 Statement stmt=con.createStatement();
-	   		 ResultSet rs=stmt.executeQuery(sql);
-	   		 while(rs.next()){
-	   			BookBean bean=new BookBean();
-	   			bean.setIsbn(rs.getString("isbn"));
-	   			System.out.println("BookDao getRecommendBook isbn:"+rs.getString("isbn"));
-	   			bean.setAuthor(rs.getString("author"));
-	   			bean.setBookcover(rs.getString("bookcover"));
-	   			bean.setPublisher(rs.getString("publisher"));
-	   			bean.setPrice(rs.getString("price"));
-	   			bean.setName(rs.getString("name"));
-	   			bean.setSummary(rs.getString("summary"));
-	   			bean.setTimeStamp(rs.getString("postTime"));
-	   			bookList.add(bean);
-	   		 }
-	   	 }catch(Exception e){
-	   		e.printStackTrace();
-	   	 }
-	   	 return bookList;
+		 
+		 //TODO 获取推荐书籍算法未完成，现返回最近书籍列表，仅供测试用
+		
+		 bookList=getRecentBook(email);
+		 
+		 return bookList;
 	}
 	
+	
 	public ArrayList<BookBean> getRecentBook(String email){
-	   	 
-	   	 String sql="select * from (" +
-	   	 		"(bookinfo inner join bookowner on bookinfo.isbn = bookowner.isbn)" +
-	   	 		"inner join userinfo on bookowner.id = userinfo.id" +
-	   	 		")order by postTime desc;"
-	   	 	;
-	   	 ArrayList<BookBean> bookList=new ArrayList<BookBean>();
-	   	 try{
-	   		 con=getConnection(true);
-	   		 Statement stmt=con.createStatement();
-	   		 ResultSet rs=stmt.executeQuery(sql);
-	   		 while(rs.next()){
-	   			BookBean bean=new BookBean();
-	   			bean.setIsbn(rs.getString("isbn"));
-	   			System.out.println("BookDao getRecentBook isbn:"+rs.getString("isbn"));
-	   			bean.setAuthor(rs.getString("author"));
-	   			bean.setBookcover(rs.getString("bookcover"));
-	   			bean.setPublisher(rs.getString("publisher"));
-	   			bean.setPrice(rs.getString("price"));
-	   			bean.setName(rs.getString("name"));
-	   			bean.setSummary(rs.getString("summary"));
-	   			bean.setTimeStamp(rs.getString("postTime"));
-	   			bookList.add(bean);
-	   		 }
-	   	 }catch(Exception e){
-	   		e.printStackTrace();
-	   	 }
-	   	 return bookList;
-  	 
-   }
+		
+	  	 List<BookBean> bookList=new ArrayList<BookBean>();
+	  	 SqlSession session=  factory.openSession();
+		
+		try{
+			
+			bookList=session.selectList("com.shining.ibookclubserver.dao.BookMapper.getRecentBook");
+			session.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+	  	 
+	  	
+		return (ArrayList)bookList;
+	}
+	
 	
 	public ArrayList<BookBean> getMyBook(String email){
-   	 
-	   	 String sql="select * from bookinfo where isbn in(select isbn from bookowner where id in(select id from userinfo where email='"+email+"'));";
-	   	 ArrayList<BookBean> bookList=new ArrayList<BookBean>();
-	   	 try{
-	   		 con=getConnection(true);
-	   		 Statement stmt=con.createStatement();
-	   		 ResultSet rs=stmt.executeQuery(sql);
-	   		 while(rs.next()){
-	   			BookBean bean=new BookBean();
-	   			bean.setIsbn(rs.getString("isbn"));
-	   			bean.setAuthor(rs.getString("author"));
-	   			bean.setBookcover(rs.getString("bookcover"));
-	   			bean.setPublisher(rs.getString("publisher"));
-	   			bean.setPrice(rs.getString("price"));
-	   			bean.setName(rs.getString("name"));
-	   			bean.setSummary(rs.getString("summary"));
-	   			bookList.add(bean);
-	   		 }
-	   	 }catch(Exception e){
-	   		e.printStackTrace();
-	   	 }
-	   	 return bookList;
-   	 
-    }
+		
+		 List<BookBean> bookList=new ArrayList<BookBean>();
+		 SqlSession session=  factory.openSession();
+		 
+		 UserMapper userMapper=new UserMapper();
+			
+		try{
+			userMapper=session.selectOne("com.shining.ibookclubserver.dao.UserMapper.getUserinfo", email);
+			bookList=session.selectList("com.shining.ibookclubserver.dao.BookMapper.getMyBook",userMapper.getId());
+			session.commit();
+				
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+	
+		 return (ArrayList)bookList;
+	}
 	
 	public ArrayList<BookBean> getPublicBook(){
-   	 
-	   	
-	   	 ArrayList<BookBean> bookList=new ArrayList<BookBean>();
-	   	 try{
-	   		 con=getConnection(true);
-	   		 Statement stmt=con.createStatement();
-	   		 ResultSet rs=stmt.executeQuery(FinalConstants.SQL_SELECT_BOOKINFO);
-	   		 while(rs.next()){
-	   			 
-	   			BookBean bean=new BookBean();
-	   			bean.setIsbn(rs.getString("isbn"));
-	   			bean.setAuthor(rs.getString("author"));
-	   			bean.setBookcover(rs.getString("bookcover"));
-	   			bean.setPublisher(rs.getString("publisher"));
-	   			bean.setPrice(rs.getString("price"));
-	   			bean.setName(rs.getString("name"));
-	   			bean.setSummary(rs.getString("summary"));
-	   			bookList.add(bean);
-	   		 }
-	   	 }catch(Exception e){
-	   		e.printStackTrace();
-	   	 }
-	   	 return bookList;
-   	 
-    }
+		
+	 	 List<BookBean> bookList=new ArrayList<BookBean>();
+	 	 SqlSession session=  factory.openSession();
+	 	 
+	 	 try{
+			
+			bookList=session.selectList("com.shining.ibookclubserver.dao.BookMapper.getBookInfo");
+			session.commit();
+				
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+
+	 	return (ArrayList)bookList;
+		
+	}
 	
 	public ArrayList<BookBean> searchPublicBook(String keyword){
 		
-		String sql="select * from bookinfo where name like '%"+keyword+"%';";
+		 List<BookBean> bookList=new ArrayList<BookBean>();
+		 SqlSession session=  factory.openSession();
+		 
+		 try{
 			
-		ArrayList<BookBean> bookList=new ArrayList<BookBean>();
-	   	 try{
-	   		 con=getConnection(true);
-	   		 Statement stmt=con.createStatement();
-	   		 ResultSet rs=stmt.executeQuery(sql);
-	   		 for(int i=0;rs.next();i++){
-	   			 
-	   			BookBean bean=new BookBean();
-	   			bean.setIsbn(rs.getString("isbn"));
-	   			bean.setAuthor(rs.getString("author"));
-	   			bean.setBookcover(rs.getString("bookcover"));
-	   			bean.setPublisher(rs.getString("publisher"));
-	   			bean.setPrice(rs.getString("price"));
-	   			bean.setName(rs.getString("name"));
-	   			bean.setSummary(rs.getString("summary"));
-	   			bookList.add(bean);
-	   		 }
-	   	 }catch(Exception e){
-	   		e.printStackTrace();
-	   	 }
-	   	 return bookList;
-		
+			bookList=session.selectList("com.shining.ibookclubserver.dao.BookMapper.searchPublicBook","%"+keyword+"%");
+			session.commit();
+		 }catch(Exception e){
+			 e.printStackTrace();
+		 }finally{
+			 session.close();
+		 }
+		 
+		return (ArrayList)bookList;
 	}
-
+	
 	private static final double EARTH_RADIUS = 6378.137;
 	
 	private static double rad(double d)
@@ -399,195 +281,114 @@ public class BookDao {
 	   s = Math.round(s * 10000) / 10000;
 	   return s;
 	}
-
 	
-	public ArrayList<String> getNearbyBook(String email,String latitude,String longitude){
-		
-		String sql="select * from bookowner where id <> (select id from userinfo where email ='"+email+"');";
+	public ArrayList<BookBean> getNearbyBook(String email,String latitude,String longitude){
 		
 		double lat=Double.parseDouble(latitude);
 		double lng=Double.parseDouble(longitude);	
-		ArrayList<String> bookISBN=new ArrayList<String>();
-	   	 try{
-	   		 con=getConnection(true);
-	   		 Statement stmt=con.createStatement();
-	   		 ResultSet rs=stmt.executeQuery(sql);
-	   		 for(int i=0;rs.next();i++){
-	   			 
-	   			if(GetDistance(Double.parseDouble(rs.getString("latitude")),
-	   							Double.parseDouble(rs.getString("longitude")),
-	   							lat,lng)<1.0)
-	   			bookISBN.add(rs.getString("isbn"));
-	   			
-	   			System.out.println(GetDistance(Double.parseDouble(rs.getString("latitude")),
-							Double.parseDouble(rs.getString("longitude")),
-							lat,lng));	
-	   		 }
-	   	 }catch(Exception e){
-	   		e.printStackTrace();
-	   	 }
-	   	 return bookISBN;
+		ArrayList<BookBean> bookList=new ArrayList<BookBean>();
+		List<String> bookISBN=new ArrayList<String>();
+		SqlSession session=  factory.openSession();
+		
+		try{
+			
+			UserMapper userMapper=session.selectOne("com.shining.ibookclubserver.dao.UserMapper.getUserinfo", email);
+			
+			List<BookOwnerMapper> ownerList=session.selectList("com.shining.ibookclubserver.dao.BookMapper.getOwnerInfoById", userMapper.getId());
+			session.commit();
+			
+			for(BookOwnerMapper mapper:ownerList){
+				
+				if(GetDistance(Double.parseDouble(mapper.getLatitude()),
+						Double.parseDouble(mapper.getLongitude()),
+						lat,lng)<1.0)
+				bookISBN.add(mapper.getIsbn());		
+			}
+			
+			bookList=getBookByIsbn((ArrayList)bookISBN);
+			
+		}catch(Exception e){
+			 e.printStackTrace();
+		 }finally{
+			 session.close();
+		}
+
+		return (ArrayList)bookList;
 		
 	}
 	
 	public ArrayList<BookBean> getBookByIsbn(ArrayList<String> isbn){
 		
-		ArrayList<BookBean> bookList=new ArrayList<BookBean>();
+		List<BookBean> bookList=new ArrayList<BookBean>();
+		SqlSession session=  factory.openSession();
 		
-		for(String is:isbn){
-		
-		String sql="select * from bookinfo where isbn = '"+is+"';";
+		try{
+			for(String is:isbn){
 			
-	
-	   	 try{
-	   		 con=getConnection(true);
-	   		 Statement stmt=con.createStatement();
-	   		 ResultSet rs=stmt.executeQuery(sql);
-	   		 for(int i=0;rs.next();i++){
-	   			 
-	   			BookBean bean=new BookBean();
-	   			bean.setIsbn(rs.getString("isbn"));
-	   			bean.setAuthor(rs.getString("author"));
-	   			bean.setBookcover(rs.getString("bookcover"));
-	   			bean.setPublisher(rs.getString("publisher"));
-	   			bean.setPrice(rs.getString("price"));
-	   			bean.setName(rs.getString("name"));
-	   			bean.setSummary(rs.getString("summary"));
-	   			bookList.add(bean);
-	   		 }
+				bookList.add((BookBean)session.selectOne("com.shining.ibookclubserver.dao.BookMapper.getBookByISBN", is));
+				session.commit();
+			}
+	   	
 	   	 }catch(Exception e){
-	   		e.printStackTrace();
-	   	 }
-		}
+			 e.printStackTrace();
+		 }finally{
+			 session.close();
+		 }
+	
 	   	 
-	   	return bookList;
-		
+	   	return (ArrayList)bookList;
 	}
 	
-	 public void setUserBean(UserBean userBean){
-         
-    	 this.userBean=userBean;
-     }
-	 
 	 public ArrayList<TimelineBean> getTimeline(String email){
 		 
-		 ArrayList<TimelineBean> timeline=new ArrayList<TimelineBean>();
-		
-		 String sql="select * from("+
-				 "timeline inner join userinfo on timeline.id = userinfo.id)" +
-				 "order by timestamp desc;";
-		
-		
-
+		 List<TimelineBean> timeline=new ArrayList<TimelineBean>();
+		 SqlSession session=  factory.openSession();
+	
 	   	 try{
-	   		 con=getConnection(true);
-	   		 Statement stmt=con.createStatement();
-	   		 ResultSet rs=stmt.executeQuery(sql);
-	   		 for(int i=0;rs.next();i++){
-	   			 
-	   			TimelineBean bean=new TimelineBean();
 	   			
-	   			String avatar=rs.getString("picture");
-	   			if(avatar==null){
-	   				avatar=FinalConstants.SERVER_URL+"Image/stub.png";
-	   			}
-	  
-	   			bean.setAvatar(avatar);
-	   			bean.setMessage(rs.getString("message"));
-	   			bean.setNickname(rs.getString("nickname"));
+	   		 timeline=session.selectList("com.shining.ibookclubserver.dao.BookMapper.getTimeline");
 	   			
-	   	
-	   			bean.setTimeStamp(rs.getString("timestamp"));
-	   			
-	   			timeline.add(bean);
+	   		 for(TimelineBean bean:timeline){
+	   		 
+		   		if(bean.getAvatar()==null){
+		   			bean.setAvatar(Dao.SERVER_URL+"Image/stub.png");
+		   		}
 	   		 }
+	  
+	   		session.commit();
+	   		 
 	   	 }catch(Exception e){
-	   		e.printStackTrace();
-	   	 }
-		 
-		 return timeline; 
+			 e.printStackTrace();
+		 }finally{
+			 session.close();
+		 }
+	
+		 return (ArrayList)timeline; 
 	 }
 	 
 	 public Boolean postTweet(String email,String message){
 		 
-	
-		 String sql="insert into timeline(id,message,timestamp)  values(?,?,?)";
+		 Boolean result=false;
+		 SqlSession session=factory.openSession();
 		 Date date = new Date();
 		 Timestamp timeStamp = new Timestamp(date.getTime());
 		 
 		 try{
-        	 con=getConnection(false);
-        	 PreparedStatement pstmt=con.prepareStatement(sql);
-             pstmt.setInt(1,findID(email));
-             pstmt.setString(2,message);
-             pstmt.setTimestamp(3, timeStamp);
-             pstmt.executeUpdate();
-             return true;
-         }
-         catch(Exception e){
-              
-        	 e.printStackTrace();
-        	 
-        	 return false;
-         }      
-		 
-	 }
-	 
-	 
-	 
- 
-     public Boolean regist() throws Exception{
-           
-    	 
-         try{
-        	 con=getConnection(false);
-        	 PreparedStatement pstmt=con.prepareStatement(FinalConstants.SQL_INSERT_USERINFO);
-             pstmt.setString(1,userBean.getEmail());
-             pstmt.setString(2,userBean.getPassWord());
-             pstmt.setString(3, userBean.getNickName());
-             pstmt.setString(4, userBean.getAge());
-             pstmt.setString(5, userBean.getGender());
-             System.out.println( userBean.getGender());
-             pstmt.setString(6, userBean.getInterest());
-             pstmt.executeUpdate();
-             return true;
-         }
-         catch(Exception e){
-        	 e.printStackTrace();
-        	 return false;
-         }      
-
-     }
-     
-     
-     public String checkPassword(String email,String pw_check) throws SQLException {
-    	 
-    	 String sql="select * from  userinfo where email='"+email+"';";
-    	 
-    	 con=getConnection(true);
-    	 Statement stmt=con.createStatement();
-		 ResultSet rs=stmt.executeQuery(sql);
-		 String pw=null;
-		 String nickname=null;
-		 
-		  
-		 if(rs.next())
-		  {
-			  pw=new String(rs.getString("password"));
-		  
-		 
-			  if(pw.equals(pw_check)){
+			
+			UserMapper userMapper=session.selectOne("com.shining.ibookclubserver.dao.UserMapper.getUserinfo", email);
+			Map<String, Object> param=new HashMap<String, Object>();  
+			param.put("id", userMapper.getId());
+			param.put("message", message);
+			param.put("timestamp", timeStamp);
+			session.insert("com.shining.ibookclubserver.dao.BookMapper.postTweet", param);
+			session.commit();
 			 
-				  nickname=new String(rs.getString("nickname"));
-				  
-			  }else{
-				  nickname="-1";
-			  }
-			  System.out.println(nickname);
-		  }
+		 }catch(Exception e){
+			 e.printStackTrace();
+		 }finally{
+			 session.close();
+		 }
 		 
-		 return nickname;
-		  
-		 
-     }
+		 return result;
+	 }
 }

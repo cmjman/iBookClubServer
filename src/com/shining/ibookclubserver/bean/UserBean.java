@@ -10,7 +10,7 @@ public class UserBean {
 	  
 	  private String interest;
 	  
-	  private String gender;
+	  private String sex;
 	  
 	  private String age;
        
@@ -23,11 +23,11 @@ public class UserBean {
 	}
 
 	public String getGender() {
-		return gender;
+		return sex;
 	}
 
 	public void setGender(String gender) {
-		this.gender = gender;
+		this.sex = gender;
 	}
 
 	public String getInterest() {

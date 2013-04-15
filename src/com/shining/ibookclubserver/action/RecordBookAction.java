@@ -13,6 +13,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.shining.ibookclubserver.dao.BookDao;
+import com.shining.ibookclubserver.dao.Dao;
 
 public class RecordBookAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -63,8 +64,10 @@ public class RecordBookAction  extends ActionSupport implements ServletRequestAw
 
 	public void recordBook(){
 		
-		BookDao dao=BookDao.getInstance();
+	//	BookDao dao=BookDao.getInstance();
 	
+
+		BookDao dao=(BookDao) BookDao.getInstance();
 		
 		try {
 			

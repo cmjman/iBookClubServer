@@ -58,7 +58,8 @@ public class SearchBookAction  extends ActionSupport implements ServletRequestAw
 	public void searchBook(){
 		
 	//	BookDao dao=BookDao.getInstance();
-		Dao dao=Dao.getInstance();
+
+		BookDao dao=(BookDao) BookDao.getInstance();
 		ArrayList<BookBean> list;
 		Gson gson_response=new Gson();
 		

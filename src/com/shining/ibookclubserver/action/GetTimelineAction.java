@@ -53,7 +53,8 @@ public class GetTimelineAction extends ActionSupport implements ServletRequestAw
 
 		
 	//	BookDao dao=BookDao.getInstance();
-		Dao dao=Dao.getInstance();
+
+		BookDao dao=(BookDao) BookDao.getInstance();
 		ArrayList<TimelineBean> list;
 		Gson gson_response=new Gson();
 		
