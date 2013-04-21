@@ -12,9 +12,9 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
+import com.shining.ibookclubserver.Service;
 import com.shining.ibookclubserver.bean.BookBean;
-import com.shining.ibookclubserver.dao.BookDao;
-import com.shining.ibookclubserver.dao.Dao;
+
 
 public class GetNearbyAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -26,6 +26,8 @@ public class GetNearbyAction  extends ActionSupport implements ServletRequestAwa
 	private String email;
 	private String latitude;
 	private String longitude;
+	
+	private Service service;
 
 	public void setServletResponse(HttpServletResponse response) {
 		
@@ -65,19 +67,29 @@ public class GetNearbyAction  extends ActionSupport implements ServletRequestAwa
 		return longitude;
 	}
 	
+	
+	
+	public Service getService() {
+		return service;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
+	}
+
 	public void getNearby(){
 		
 		System.out.println("getNearby Location:"+latitude+longitude);
 		
 	//	BookDao dao=BookDao.getInstance();
 
-		BookDao dao=(BookDao) BookDao.getInstance();
+	
 		ArrayList<BookBean> list;
 		Gson gson_response=new Gson();
 		
 	//	ArrayList<String> isbn=new ArrayList<String>();
 		
-		list=dao.getNearbyBook(email, latitude, longitude);
+		list=service.getNearbyBook(email, latitude, longitude);
 		
 //		list=dao.getBookByIsbn(isbn);
 		

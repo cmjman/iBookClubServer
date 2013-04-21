@@ -12,10 +12,11 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.shining.ibookclubserver.Service;
 import com.shining.ibookclubserver.bean.UserBean;
-import com.shining.ibookclubserver.dao.BookDao;
-import com.shining.ibookclubserver.dao.Dao;
-import com.shining.ibookclubserver.dao.UserDao;
+
+;
+
 
 public class RegisterAction extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -30,6 +31,16 @@ public class RegisterAction extends ActionSupport implements ServletRequestAware
 	private String interest;
 	private String gender;
 	private String age;
+	
+	private Service service;
+
+	public Service getService() {
+		return service;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
+	}
 
 	public String getAge() {
 		return age;
@@ -89,19 +100,20 @@ public class RegisterAction extends ActionSupport implements ServletRequestAware
 		
 		UserBean userBean=new UserBean();
 		userBean.setEmail(email);
-		userBean.setPassWord(password);
-		userBean.setNickName(nickname);
+		userBean.setPassword(password);
+		userBean.setNickname(nickname);
 		userBean.setInterest(interest);
-		userBean.setGender(gender);
-		userBean.setAge(age);
+		userBean.setSex(gender);
+		userBean.setAge(Integer.parseInt(age));
 	//	BookDao dao=BookDao.getInstance();
-		UserDao dao=(UserDao)UserDao.getInstance();
+	//	UserDao dao=(UserDao)UserDao.getInstance();
 		
 		JSONObject jsonObj= new JSONObject();
 		try{
-		  dao.setUserBean(userBean);
+		  
 		
-		 if(dao.regist())
+		
+		 if(service.regist(userBean))
 		  	jsonObj.put("ActionResult", true);
 		 else
 		  	jsonObj.put("ActionResult", false);

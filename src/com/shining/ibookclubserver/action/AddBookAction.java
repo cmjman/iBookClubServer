@@ -14,9 +14,10 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.opensymphony.xwork2.ActionSupport;
+import com.shining.ibookclubserver.Service;
 import com.shining.ibookclubserver.bean.BookBean;
-import com.shining.ibookclubserver.dao.BookDao;
-import com.shining.ibookclubserver.dao.Dao;
+
+
 
 public class AddBookAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 	
@@ -29,8 +30,18 @@ public class AddBookAction  extends ActionSupport implements ServletRequestAware
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	
+	private Service service;
 
 	
+	public Service getService() {
+		return service;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
+	}
+
 	public String getRating() {
 		return rating;
 	}
@@ -88,16 +99,14 @@ public class AddBookAction  extends ActionSupport implements ServletRequestAware
 		
 		System.out.println(bookbean.getIsbn());
 		
-	//	BookDao dao=BookDao.getInstance();
-		BookDao dao=(BookDao) BookDao.getInstance();
+
 	
-		dao.setBookBean(bookbean);
 		
 		
 		try {
-			if(!dao.isBookExist())
-				dao.addBook();
-			dao.setOwnerInfo(email,latitude,longitude,rating);
+			if(!service.isBookExist(bookbean))
+				service.addBook(bookbean);
+			service.setOwnerInfo(email,latitude,longitude,rating,bookbean);
 		
 			JSONObject jsonObj=new JSONObject();
 	

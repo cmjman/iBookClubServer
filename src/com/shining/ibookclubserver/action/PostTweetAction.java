@@ -12,10 +12,10 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
+import com.shining.ibookclubserver.Service;
 import com.shining.ibookclubserver.bean.BookBean;
 import com.shining.ibookclubserver.bean.TimelineBean;
-import com.shining.ibookclubserver.dao.BookDao;
-import com.shining.ibookclubserver.dao.Dao;
+
 
 public class PostTweetAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 	
@@ -26,6 +26,8 @@ public class PostTweetAction  extends ActionSupport implements ServletRequestAwa
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	
+	private Service service;
 
 	public void setServletResponse(HttpServletResponse response) {
 		
@@ -59,6 +61,17 @@ public class PostTweetAction  extends ActionSupport implements ServletRequestAwa
 		this.message = message;
 	}
 
+	
+	
+	
+	public Service getService() {
+		return service;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
+	}
+
 	public void  postTweet(){ 
 		
 
@@ -66,13 +79,12 @@ public class PostTweetAction  extends ActionSupport implements ServletRequestAwa
 	
 		//BookDao dao=BookDao.getInstance();
 
-		BookDao dao=(BookDao) BookDao.getInstance();
 	
 	
 		
 		
 		try {
-			dao.postTweet(email, message);
+			service.postTweet(email, message);
 		
 			JSONObject jsonObj=new JSONObject();
 	

@@ -13,8 +13,9 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.shining.ibookclubserver.dao.BookDao;
-import com.shining.ibookclubserver.dao.Dao;
+import com.shining.ibookclubserver.Service;
+
+
 
 public class CheckBookAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -25,6 +26,8 @@ public class CheckBookAction  extends ActionSupport implements ServletRequestAwa
 	
 	private String email;
 	private String isbn;
+	
+	private Service service;
 
 	public void setServletResponse(HttpServletResponse response) {
 		
@@ -53,13 +56,22 @@ public class CheckBookAction  extends ActionSupport implements ServletRequestAwa
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
+	
+	
+
+	public Service getService() {
+		return service;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
+	}
 
 	public void checkBook(){
-			
-		//	BookDao dao=BookDao.getInstance();
+		
 
-		BookDao dao=(BookDao) BookDao.getInstance();
-			Boolean result=dao.checkBook(email, isbn);
+	
+			Boolean result=service.checkBook(email, isbn);
 			
 			JSONObject jsonObj=new JSONObject();
 			try {

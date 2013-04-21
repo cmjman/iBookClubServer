@@ -14,16 +14,19 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
+import com.shining.ibookclubserver.Service;
 import com.shining.ibookclubserver.bean.BookBean;
 import com.shining.ibookclubserver.bean.TimelineBean;
-import com.shining.ibookclubserver.dao.BookDao;
-import com.shining.ibookclubserver.dao.Dao;
+
+
 
 public class GetTimelineAction extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 	
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	
+	private Service service;
 
 	private String email;
 
@@ -48,19 +51,29 @@ public class GetTimelineAction extends ActionSupport implements ServletRequestAw
 		
 	}
 	
+	
+	
+	public Service getService() {
+		return service;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
+	}
+
 	public void getTimeline(){
 		
 
 		
 	//	BookDao dao=BookDao.getInstance();
 
-		BookDao dao=(BookDao) BookDao.getInstance();
+	
 		ArrayList<TimelineBean> list;
 		Gson gson_response=new Gson();
 		
 	
 		
-		list=dao.getTimeline(email);
+		list=service.getTimeline(email);
 	
 		PrintWriter out;
 		try {

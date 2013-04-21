@@ -14,9 +14,9 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
+import com.shining.ibookclubserver.Service;
 import com.shining.ibookclubserver.bean.BookBean;
-import com.shining.ibookclubserver.dao.BookDao;
-import com.shining.ibookclubserver.dao.Dao;
+
 
 public class GetRecommendAction extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -25,6 +25,8 @@ public class GetRecommendAction extends ActionSupport implements ServletRequestA
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private String email;
+	
+	private Service service;
 	
 	@Override
 	public void setServletResponse(HttpServletResponse response) {
@@ -48,19 +50,28 @@ public class GetRecommendAction extends ActionSupport implements ServletRequestA
 		this.email = email;
 	}
 	
+	
+	
+	public Service getService() {
+		return service;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
+	}
+
 	public void getRecommend(){
 		
 		
 		
-		//BookDao dao=BookDao.getInstance();
-
-		BookDao dao=(BookDao) BookDao.getInstance();
+	
+	
 		ArrayList<BookBean> list;
 		Gson gson_response=new Gson();
 		
 		Map<String,String> json=new HashMap<String,String>();  
 		
-		list=dao.getRecommendBook(email);
+		list=service.getRecommendBook(email);
 	
 		PrintWriter out;
 		try {

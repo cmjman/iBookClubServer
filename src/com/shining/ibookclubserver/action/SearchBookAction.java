@@ -13,9 +13,10 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
+import com.shining.ibookclubserver.Service;
 import com.shining.ibookclubserver.bean.BookBean;
-import com.shining.ibookclubserver.dao.BookDao;
-import com.shining.ibookclubserver.dao.Dao;
+
+
 
 public class SearchBookAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -27,6 +28,8 @@ public class SearchBookAction  extends ActionSupport implements ServletRequestAw
 	private String email;
 	private String keyword;
 
+	private Service service;
+	
 	public void setServletResponse(HttpServletResponse response) {
 		
 		this.response=response;
@@ -54,16 +57,26 @@ public class SearchBookAction  extends ActionSupport implements ServletRequestAw
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
 	}
+	
+	
+
+	public Service getService() {
+		return service;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
+	}
 
 	public void searchBook(){
 		
-	//	BookDao dao=BookDao.getInstance();
+	
 
-		BookDao dao=(BookDao) BookDao.getInstance();
+	
 		ArrayList<BookBean> list;
 		Gson gson_response=new Gson();
 		
-		list=dao.searchPublicBook(keyword);
+		list=service.searchPublicBook(keyword);
 		
 		PrintWriter out;
 		try {
@@ -71,7 +84,7 @@ public class SearchBookAction  extends ActionSupport implements ServletRequestAw
 			out.print(gson_response.toJson(list));
 			out.flush();
 			out.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 		
 			e.printStackTrace();
 		}

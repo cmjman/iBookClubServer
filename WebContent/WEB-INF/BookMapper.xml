@@ -8,8 +8,8 @@
         select * from bookinfo where isbn=#{isbn}
     </select>
   	
-    <select id="getBookOwnerInfo" parameterType="int" resultType="com.shining.ibookclubserver.dao.BookOwnerMapper">
-        select * from bookinfo where id = #{id}
+    <select id="checkIfPosted" parameterType="map" resultType="com.shining.ibookclubserver.dao.BookOwnerMapper">
+        select * from bookowner where isbn=#{isbn} and id = #{id}
     </select>
     
     <resultMap type="com.shining.ibookclubserver.bean.BookBean" id="bookResultMap">
@@ -50,7 +50,7 @@
         )
     </select>
     
-    <select id="getOwnerInfoById" parameterType="int" resultMap="bookOwnerResultMap">
+    <select id="getOwnerInfoExceptSelf" parameterType="int" resultMap="bookOwnerResultMap">
         select * from 
         bookowner where id  <![CDATA[<>]]> #{id}
     </select>
@@ -125,8 +125,12 @@
     
     <insert id="postTweet" parameterType="map">
         insert into timeline
-        (#{id},#{message},#{timestamp})  
-        values(?,?,?)
+        (
+        	 id,
+        	 message,
+        	timestamp
+        )  
+        values(#{id},#{message},#{timestamp})
     </insert>
     
     <delete id="deleteBook" parameterType="map">

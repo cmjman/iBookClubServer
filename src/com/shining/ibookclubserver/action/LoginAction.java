@@ -14,9 +14,10 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.shining.ibookclubserver.dao.BookDao;
-import com.shining.ibookclubserver.dao.Dao;
-import com.shining.ibookclubserver.dao.UserDao;
+import com.shining.ibookclubserver.Service;
+import com.shining.ibookclubserver.ServiceImpl;
+
+
 
 public class LoginAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -29,6 +30,16 @@ public class LoginAction  extends ActionSupport implements ServletRequestAware,S
 	
 	private String email;
 	private String password;
+	
+	private Service service;
+
+	public Service getService() {
+		return service;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
+	}
 
 	@Override
 	public void setServletResponse(HttpServletResponse response) {
@@ -60,6 +71,20 @@ public class LoginAction  extends ActionSupport implements ServletRequestAware,S
 	}
 	
 	public void  login(){  
+		
+		try{
+		
+			
+			
+			PrintWriter out = response.getWriter();
+			out.print(service.login(email, password));
+			out.flush();
+			out.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		/*
 		
 	
 		System.out.println("LoginAction:"+email+password);
@@ -98,6 +123,8 @@ public class LoginAction  extends ActionSupport implements ServletRequestAware,S
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-		}	
+		}	*/
+		
+		
 	}     
 }

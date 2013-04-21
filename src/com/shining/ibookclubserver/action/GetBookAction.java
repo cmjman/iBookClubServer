@@ -13,9 +13,10 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
+import com.shining.ibookclubserver.Service;
 import com.shining.ibookclubserver.bean.BookBean;
-import com.shining.ibookclubserver.dao.BookDao;
-import com.shining.ibookclubserver.dao.Dao;
+
+
 
 public class GetBookAction extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 	
@@ -24,6 +25,8 @@ public class GetBookAction extends ActionSupport implements ServletRequestAware,
 	private HttpServletResponse response;
 	
 	private String email;
+	
+	private Service service;
 
 	public void setServletResponse(HttpServletResponse response) {
 		
@@ -44,6 +47,16 @@ public class GetBookAction extends ActionSupport implements ServletRequestAware,
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	
+
+	public Service getService() {
+		return service;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
+	}
 
 	public void getBook(){
 		
@@ -51,18 +64,18 @@ public class GetBookAction extends ActionSupport implements ServletRequestAware,
 		
 	//	BookDao dao=BookDao.getInstance();
 
-		BookDao dao=(BookDao) BookDao.getInstance();
+
 		ArrayList<BookBean> list;
 		Gson gson_response=new Gson();
 		if(email==null){
 			
-			list=dao.getPublicBook();
+			list=service.getPublicBook();
 			
 			System.out.println("GetPublicBook返回："+gson_response.toJson(list));
 			
 		}else{
 	
-			 list=dao.getMyBook(email);
+			 list=service.getMyBook(email);
 			 System.out.println("GetMyBook返回："+gson_response.toJson(list));
 		
 		}

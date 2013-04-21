@@ -12,8 +12,8 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.shining.ibookclubserver.dao.BookDao;
-import com.shining.ibookclubserver.dao.Dao;
+import com.shining.ibookclubserver.Service;
+
 
 public class RecordBookAction  extends ActionSupport implements ServletRequestAware,ServletResponseAware{
 
@@ -25,6 +25,8 @@ public class RecordBookAction  extends ActionSupport implements ServletRequestAw
 	private String isbn;
 	private String nickname;
 
+	private Service service;
+	
 	public void setServletResponse(HttpServletResponse response) {
 		
 		this.response=response;
@@ -67,11 +69,11 @@ public class RecordBookAction  extends ActionSupport implements ServletRequestAw
 	//	BookDao dao=BookDao.getInstance();
 	
 
-		BookDao dao=(BookDao) BookDao.getInstance();
+	
 		
 		try {
 			
-			Boolean result=dao.recordBook(email, nickname,isbn);
+			Boolean result=service.recordBook(email, nickname,isbn);
 			
 			response.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
